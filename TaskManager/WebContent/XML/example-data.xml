@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema name="PBcart">
+    <jdbcURL>jdbc:mysql://localhost:3306/</jdbcURL>
+	<username>root</username>
+	<password>root</password>
+	<table name="Customer">
+		<column type="varChar" length="25" name="userName" />
+		<column type="varChar" length="50" name="name" />
+		<column type="varChar" length="25" name="password" />
+		<column type="varChar" length="80" name="address" />
+		<column type="varChar" length="80" name="email" />
+		<column type="varChar" length="10" name="phone" />		
+		<column type="integer" name="orderCount" />
+	</table>
+	<table name="Payment">
+	    <column type="integer" name="paymentID" autoIncrement="true"/>
+		<column type="varChar" length="25" name="userName" />
+		<column type="varChar" length="15" name="Type" />
+		<column type="varChar" length="100" name="Detail" />
+		<column type="Date" name="Date" />
+		<column type="varChar" length="100" name="BillingAddress" />
+	</table>
+	<table name="Order">
+	    <column type="integer" name="orderId" autoIncrement="true" />
+		<column type="varChar" length="25" name="userName" />
+		<column type="Date" name="Date" />
+		<column type="varChar" length="1" name="status" />
+		<column type="varChar" length="100" name="ItemList" />
+		<column type="Decimal(6,2)" name="ShippingCost" />
+		<column type="integer" name="paymentId" />
+		<column type="varChar" length="100" name="ShippingAddress" />
+	</table>
+	<table name="LineItem">
+		<column type="integer" name="ItemID" autoIncrement="true" />
+		<column type="integer" name="Quantity" />
+		<column type="integer" name="ProductID" />
+	</table>
+	<table name="Product">
+	    <column type="integer" name="productID" autoIncrement="true" />
+		<column type="varChar" length="40" name="name" />
+		<column type="varChar" length="30" name="Supplier" />
+		<column type="integer" name="StockQTY" />
+		<column type="Decimal(6,2)" name="Price" />
+		<column type="Decimal(6,2)" name="Cost" />
+	</table>
+	<product name="asdf1" supplier="asdf1" quantity="10" price="10.50" cost="5.00" />
+	<product name="asdf2" supplier="asdf2" quantity="10" price="10.50" cost="5.00" />
+	<product name="asdf3" supplier="asdf3" quantity="10" price="10.50" cost="5.00" />
+	<product name="asdf4" supplier="asdf4" quantity="0" price="11.58" cost="3.50" />
+</schema>

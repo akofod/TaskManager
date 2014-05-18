@@ -1,0 +1,107 @@
+#wrapper {
+	height: 100%;
+	width: 100%;
+}
+
+#content-wrapper {
+	margin-left:auto;
+	margin-right:auto;
+	width:700px;
+	background-color:#F0F0F0;
+	box-shadow:5px 5px 10px #888888;
+}
+
+header {
+	width:700px;
+	height:60px;
+	margin-left:auto;
+	margin-right:auto;
+	border-radius:15px 15px 0px 0px;
+	background-color:#D0D0D0;
+	box-shadow:5px 5px 10px #888888;	
+}
+
+header div {
+	float:left;
+}
+
+footer {
+	width:700px;
+	height:40px;
+	text-align:right;
+	margin-left:auto;
+	margin-right:auto;
+	border-radius:0px 0px 15px 15px;
+	background-color:#D0D0D0;
+	box-shadow:5px 5px 10px #888888;
+}
+
+#ToDo {
+	border-right:1px dashed;
+	background-color:rgba(255, 0, 0, .1);
+	width:233px;
+	display:table-cell;
+}
+
+#Done {
+	border-right:1px dashed;
+	background-color:rgba(255,255,0,.1);
+	width:233px;
+	display:table-cell;
+}
+
+#Graded {
+	background-color:rgba(0,255,0,.1);
+	width:233px;
+	display:table-cell;
+}
+
+.item {
+	background-color:white;
+	border-radius:15px;
+	box-shadow:5px 5px 5px #888888;
+	width:200px;
+	max-height:100px;
+	margin:15px;
+	opacity:0.5;
+	padding-bottom:2px;
+}
+
+ .ui-state-highlight { 
+ 	height: 75px; 
+ 	line-height: 75px; 
+ }
+ 
+ .item-assign {
+ 	background-color:black;
+ 	color:white;
+ 	border-radius:15px 15px 0px 0px;
+ 	padding-left:8px;
+ 	padding-right:8px;
+ }
+ 
+ .item-dueDate {
+ 	padding-left:8px;
+ 	padding-right:8px;
+ 	border-bottom:1px dotted;
+ }
+ 
+ .item-footer {
+	 padding-left:8px;
+	 padding-right:8px;
+	 border-radius:0px 0px 15px 15px;
+	 border-top:1px dotted;
+	 text-align:center;
+ }
+ 
+ .item-class {
+ 	padding-left:8px;
+ 	padding-right:8px;
+ 	border-bottom:1px dotted;
+ 	background-color:#FFF000;
+ }
+ 
+ .item-points {
+ 	padding-left:8px;
+ 	padding-right:8px;
+ }
