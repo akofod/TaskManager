@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema name="frank73_s14org">
+    <jdbcURL>jdbc:mysql://s14org.franklinpracticum.com</jdbcURL>
+	<username>frank73_s14org</username>
+	<password>org2014</password>
+	<table name="Categories" primary_key="category_id">
+	    <column type="integer" name="category_id"/>
+	    <column type="varChar" length="50" name="description" ></column>
+	</table>
+	<table name="Users" primary_key="user_id">
+		<column type="varChar" length="25" name="user_id"></column>
+		<column type="varChar" length="25" name="nickname" />
+		<column type="varChar" length="25" name="firstname"></column>
+		<column type="varChar" length="25" name="lastname" />
+		<column type="varChar" length="25" name="password"></column>
+	</table>
+	<table name="Teams" primary_key="team_id">
+		<column type="integer" name="team_id" />
+		<column type="varChar" length="50" name="description" />
+	</table>
+	
+	<table name="Projects" primary_key="project_id" foreign_key_1="category_id" foreign_key_1_table="Categories" foreign_key_1_field="category_id">
+		<column type="integer" name="project_id" />
+		<column type="integer" name="category_id" />
+		<column type="date" name="final_deadline" />
+	</table>
+	<table name="UserTeam" primary_key="user_id, team_id"
+		foreign_key_1="user_id" foreign_key_1_table="Users" foreign_key_1_field="user_id" foreign_key_2="team_id" foreign_key_2_table="Teams" foreign_key_2_field="team_id">
+		<column type="varChar" name="user_id" length="25" />
+		<column type="integer" name="team_id" />
+
+	</table>
+	<table name="TeamProject" primary_key="team_id, project_id"
+		foreign_key_1="team_id" foreign_key_1_table="Teams"
+		foreign_key_1_field="team_id" foreign_key_2="project_id" foreign_key_2_table="Projects"
+		foreign_key_2_field="project_id">
+		<column type="integer" name="team_id"></column>
+		<column type="integer" name="project_id"></column>
+	</table>
+	<table name="Tasks" primary_key="task_id" foreign_key_1="project_id"
+		foreign_key_1_table="Projects" foreign_key_1_field="project_id">
+		<column name="task_id" type="integer"></column>
+		<column name="description" type="varChar" length="80"></column>
+		<column name="due_date" type="date"></column><column name="priority" type="varChar" length="25"></column>
+		
+		<column name="time_estimate" type="double precision"></column>
+		<column name="time_completed" type="double precision"></column>
+		<column name="status" type="varChar" length="25"></column>
+		<column name="project_id" type="integer"></column>
+	</table>
+	<table name="UserTask" primary_key="user_id, task_id" foreign_key_1="user_id"
+		foreign_key_1_table="Users" foreign_key_1_field="user_id" foreign_key_2="task_id"
+		foreign_key_2_table="Tasks" foreign_key_2_field="task_id">
+		<column name="user_id" type="varChar" length="25"></column>
+		<column name="task_id" type="integer"></column>
+	</table>
+</schema>
