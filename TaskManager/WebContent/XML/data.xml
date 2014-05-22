@@ -42,8 +42,8 @@
 		foreign_key_1_table="Projects" foreign_key_1_field="project_id">
 		<column name="task_id" type="integer"></column>
 		<column name="description" type="varChar" length="80"></column>
-		<column name="due_date" type="date"></column><column name="priority" type="varChar" length="25"></column>
-		
+		<column name="due_date" type="date"></column>
+		<column name="priority" type="varChar" length="25"></column>		
 		<column name="time_estimate" type="double precision"></column>
 		<column name="time_completed" type="double precision"></column>
 		<column name="status" type="varChar" length="25"></column>
