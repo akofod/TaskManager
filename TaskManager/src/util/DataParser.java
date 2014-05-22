@@ -54,7 +54,6 @@ public class DataParser {
 				if (table.getNodeType() == Node.ELEMENT_NODE) {		 
 					NodeList columns = table.getChildNodes();
 					eElement = (Element) table;
-					System.out.println(eElement.getAttribute("name"));
 					
 					for (int j = 0; j < columns.getLength(); j++) {
 						Node column = columns.item(j);
@@ -65,17 +64,33 @@ public class DataParser {
 							}
 						}
 					}
+
 				}
-				
-				createTable(eElement.getAttribute("name"), cStrings);
+				if (eElement.hasAttribute("foreign_key_2")) {
+					String foreign = "";
+					foreign += ", FOREIGN KEY (" + eElement.getAttribute("foreign_key_1") + ")";
+					foreign += " REFERENCES " + eElement.getAttribute("foreign_key_1_table") + " (" + eElement.getAttribute("foreign_key_1_field") + "), ";
+					foreign += " FOREIGN KEY (" + eElement.getAttribute("foreign_key_2") + ")";
+					foreign += " REFERENCES " + eElement.getAttribute("foreign_key_2_table") + " (" + eElement.getAttribute("foreign_key_2_field") + ")";
+					createTable(eElement.getAttribute("name"), eElement.getAttribute("primary_key"), foreign, cStrings);
+				}
+				else if (eElement.hasAttribute("foreign_key_1")) {
+					String foreign = "";
+					foreign += ", FOREIGN KEY (" + eElement.getAttribute("foreign_key_1") + ")";
+					foreign += " REFERENCES " + eElement.getAttribute("foreign_key_1_table") + " (" + eElement.getAttribute("foreign_key_1_field") + ")";
+					createTable(eElement.getAttribute("name"), eElement.getAttribute("primary_key"), foreign, cStrings);
+				}
+				else {
+					createTable(eElement.getAttribute("name"), eElement.getAttribute("primary_key"), "", cStrings);
+				}				
 			}
 			
-			NodeList products = doc.getElementsByTagName("product");
+/*			NodeList products = doc.getElementsByTagName("product");
 			for (int i = 0; i < products.getLength(); i++) {
 				Node product = products.item(i);
 				sqlList.add(insertProduct(product));
 			}
-			
+*/			
 			runBatchSQL(sqlList);
 
 		} catch (Exception e) {
@@ -85,63 +100,50 @@ public class DataParser {
 	
 	private static void createSchema(String schema) {
 		schemaName = schema;
-		String drop= "DROP SCHEMA IF EXISTS " + schema;
-		String create = "CREATE SCHEMA " + schema;
+		String drop= "DROP SCHEMA IF EXISTS " + schema + ";";
+		String create = "CREATE SCHEMA " + schema + ";";
 		sqlList.add(drop);
 		sqlList.add(create);
 	}
 	
-	private static void createTable(String tableName, ArrayList<String> columns) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Create Table " + schemaName + "." + tableName + " (");
+	private static void createTable(String tableName, String primaryKey, String foreignKey, ArrayList<String> columns) {
+		String sb = new String();
+		sb += "Create Table " + schemaName + "." + tableName + " (";
 			for (int i = 0; i < columns.size(); i++) {
 				if(columns.get(i) != null) {
-					sb.append(columns.get(i));
+					sb+=columns.get(i);
 					if (i != (columns.size() - 1)) {
-						sb.append(", ");
+						sb+=", ";
 					}
 				}
 			}
-		sb.append(")");
-		sqlList.add(sb.toString());
+		sb += ", PRIMARY KEY(" + primaryKey + ")";
+		sb += foreignKey;
+		sb += ");";
+		sqlList.add(sb);
 	}
 	
 	private static String createColumnString(Node cNode) {
 		
-		StringBuilder sb = new StringBuilder();
+		String sb = new String();
 		
 		if (cNode.getNodeType() == Node.ELEMENT_NODE && cNode != null){
 			Element eElement = (Element) cNode;
-			sb.append(eElement.getAttribute("name") + " ");
+			sb+=eElement.getAttribute("name") + " ";
 			
 			if (eElement.getAttribute("type").equalsIgnoreCase("varchar")) {
-				sb.append("VARCHAR");
-				sb.append("(" + eElement.getAttribute("length") + ")");
+				sb+="VARCHAR";
+				sb+="(" + eElement.getAttribute("length") + ")";
 			}
 			else {
-				sb.append(eElement.getAttribute("type"));
+				sb+=eElement.getAttribute("type");
 				if (eElement.hasAttribute("autoIncrement")) {
-					sb.append(" AUTO_INCREMENT, PRIMARY KEY (" + eElement.getAttribute("name") + ")");
+					sb+=" AUTO_INCREMENT, PRIMARY KEY (" + eElement.getAttribute("name") + ")";
 				}
 			}
-			return sb.toString();
+			return sb;
 		}
 		return null;
-	}
-	
-	private static String insertProduct(Node cNode) {
-		StringBuilder sb = new StringBuilder();
-		Element eElement = (Element) cNode;
-		String name = eElement.getAttribute("name");
-		String supplier = eElement.getAttribute("supplier");
-		int qty = Integer.parseInt(eElement.getAttribute("quantity"));
-		double cost = Double.parseDouble(eElement.getAttribute("cost"));
-		double price = Double.parseDouble(eElement.getAttribute("price"));
-		
-		sb.append("insert into " + schemaName + ".product (name, Supplier, StockQTY, Price, Cost) " +
-				"VALUES ('" + name + "', '" + supplier + "', " + qty + ", " + price + ", " + cost + ")");
-		
-		return sb.toString();
 	}
 	
 	private static void runBatchSQL(ArrayList<String> sqlList) {
@@ -170,9 +172,25 @@ public class DataParser {
 			Driver myDriver = new com.mysql.jdbc.Driver();
 			DriverManager.registerDriver(myDriver);
 			conn = DriverManager.getConnection(jdbcURL, username, password);
+			System.out.println(jdbcURL);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
+/*	
+	private static String insertProduct(Node cNode) {
+		String sb = new String();
+		Element eElement = (Element) cNode;
+		String name = eElement.getAttribute("name");
+		String supplier = eElement.getAttribute("supplier");
+		int qty = Integer.parseInt(eElement.getAttribute("quantity"));
+		double cost = Double.parseDouble(eElement.getAttribute("cost"));
+		double price = Double.parseDouble(eElement.getAttribute("price"));
+		
+		sb+="insert into " + schemaName + ".product (name, Supplier, StockQTY, Price, Cost) " +
+				"VALUES ('" + name + "', '" + supplier + "', " + qty + ", " + price + ", " + cost + ")";
+		
+		return sb;
+	}
+*/
 }
