@@ -9,4 +9,25 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <servlet>
+  	<servlet-name>AuthServletTest</servlet-name>
+  	<servlet-class>control.AuthServletTest</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+  	<servlet-name>AuthServletTest</servlet-name>
+  	<url-pattern>/AuthServletTest</url-pattern>
+  </servlet-mapping>
+  
+  <filter>
+  	<filter-name>AuthFilter</filter-name>
+  	<filter-class>control.AuthFilter</filter-class>
+  </filter> 
+  
+  <filter-mapping>
+  	<filter-name>AuthFilter</filter-name>
+  	<url-pattern>/admin/*</url-pattern>
+  </filter-mapping>
+  
 </web-app>
