@@ -32,17 +32,14 @@ public class AuthFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;	
 		HttpServletResponse httpResponse = (HttpServletResponse) response;		
 		HttpSession session = httpRequest.getSession(false);
-		if (session == null) {	
-			return;
-		}
+		String redirectURL = httpRequest.getContextPath() + "/authTest.jsp";
+			
+		if (httpRequest.getRequestURI().equals(redirectURL) || session.getAttribute("auth") != null) {
+		    chain.doFilter(request, response);
+		} 
 		else {
-			if (session.getAttribute("auth") != null) {
-				chain.doFilter(request, response);
-			}
-			else {
-				session.invalidate();
-				return;
-			}
+			session.invalidate();
+		    httpResponse.sendRedirect(redirectURL);
 		}
 	}
 
