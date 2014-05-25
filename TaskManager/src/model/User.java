@@ -11,7 +11,7 @@ public class User implements Serializable {
 	private String firstname;
 	private String lastname;
 	private String password;
-	private ArrayList<Team> teams; //Can a user be a member of more than one team?
+	private ArrayList<Team> teams; //TODO: Can a user be a member of more than one team?
 	private ArrayList<Task> allTasks;
 	
 	public int getId() {

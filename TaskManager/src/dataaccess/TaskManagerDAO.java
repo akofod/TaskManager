@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import model.Category;
 import model.Project;
 import model.Task;
 import model.Team;
@@ -164,10 +165,121 @@ public class TaskManagerDAO {
 	}
 	
 	/**
-	 * Retrieve all tasks for a user.
+	 * Retrieves all tasks for specified user.
+	 * @param user -  The user
+	 * @return All tasks for user
 	 */
 	public ArrayList<Task> retrieveTasks(User user) {
 		return null;
 	}
 	
+	public ArrayList<Task> retrieveTasks(Team team) {
+		return null;
+	}
+	
+	public ArrayList<Task> retrieveTasks(Project project) {
+		return null;
+	}
+	
+	public ArrayList<Task> retrieveTasks(User user, Category cat) {
+		return null;
+	}
+	
+	public User retrieveUser(int id) {
+		return null;
+	}
+	
+	public User retrieveUser(String nickname) {
+		return null;
+	}
+	
+	public ArrayList<User> retrieveUsers(Project project) {
+		return null;
+	}
+	
+	public ArrayList<User> retrieveUsers(Team team) {
+		return null;
+	}
+	
+	public Project retrieveProject(int id) {
+		return null;
+	}
+	
+	public ArrayList<Project> retrieveProjects(Team team) {
+		return null;
+	}
+	
+	public ArrayList<Project> retrieveProjects(User user) {
+		return null;
+	}
+	
+	public Team retrieveTeam(int id) {
+		return null;
+	}
+	
+	public Category retrieveCategory(int id) {
+		return null;
+	}
+	
+	public Category retrieveCategory(String desc) {
+		return null;
+	}
+	
+	public ArrayList<Category> retrieveCategories() {
+		return null;
+	}
+	
+	public Boolean updateUser(int user_id, String username, String firstName, String lastName,
+			String email, String password) {
+		return false;
+	}
+	
+	public Boolean updateTeam(int team_id, String description) {
+		return false;
+	}
+	
+	public Boolean updateProject(int project_id, String description, int catId, Date deadline) {
+		return false;
+	}
+	
+	public Boolean updateCategory(int category_id, String description) {
+		return false;
+	}
+	
+	public Boolean updateTask(int task_id, String description, Date dueDate, int priority,
+			Date timeEst, int projectId, int userId) {
+		return false;
+	}
+	
+	public Boolean deleteUser(User user) {
+		return false;
+	}
+	
+	public Boolean deleteTeam(Team team) {
+		return false;
+	}
+	
+	public Boolean deleteProject(Project project) {
+		return false;
+	}
+	
+	public Boolean deleteCategory(Category category) {
+		return false;
+	}
+	
+	public Boolean deleteTask(Task task) {
+		return false;
+	}
+	
+	public Boolean removeProjectFromTeam(Project project, Team team) {
+		return false;
+	}
+	
+	public Boolean removeUserFromTeam(User user, Team team) {
+		return false;
+	}
+	
+	public Boolean removeTaskFromUser(Task task, User user) {
+		return false;
+	}
 }
