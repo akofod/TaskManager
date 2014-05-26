@@ -2,7 +2,10 @@ package dataaccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,9 +16,12 @@ import model.Team;
 import model.User;
 
 public class TaskManagerDAO {
-	private String userid;      //TODO: We will need to determine how we want to
-	private String password;    //get the userid, password and url into the DAO.
-	private String url;
+	private final int NO_RECORD = -1;
+	private final int RECORD_EXISTS = 0;
+	private final int SUCCESS = 1;
+	private String userid = "frank73_s14org";      //TODO: We will need to determine how we want to
+	private String password = "org2014";          //get the userid, password and url into the DAO.
+	private String url = "jdbc:mysql://s14org.franklinpracticum.com";
 	private Connection con;
 	
 	/**
@@ -27,6 +33,8 @@ public class TaskManagerDAO {
 	
 	/**
 	 * Establishes connection with database.
+	 * Tries to connect three times before throwing exception
+	 * to allow for heavy database traffic.
 	 * @return the database connection.
 	 */
 	public Connection getConnection() {
@@ -40,7 +48,15 @@ public class TaskManagerDAO {
         try {
             con = DriverManager.getConnection(url, userid, password);
         } catch (SQLException e) {
-            System.err.println("SQLException: " + e.getMessage());
+        	try {
+                con = DriverManager.getConnection(url, userid, password);
+            } catch (SQLException ex) {
+            	try {
+                    con = DriverManager.getConnection(url, userid, password);
+                } catch (SQLException exc) {
+                    System.err.println("SQLException: " + exc.getMessage());
+                }
+            }
         }
 
         return con;
@@ -65,8 +81,18 @@ public class TaskManagerDAO {
 	 * @return True if the user is in the database and the password
 	 * is correct, false otherwise.
 	 */
-	public Boolean authenticateUser(String username, String password) {		
-		return false;
+	public int authenticateUser(String username, String password) {
+		User user = retrieveUser(username);
+		if (user != null) {
+			if (user.getNickname().equals(username) && user.getPassword().equals(password)) {
+				return SUCCESS;
+			}
+			else {
+				return RECORD_EXISTS;
+			}
+		}
+		return NO_RECORD;
+			
 	}
 	
 	/**
@@ -78,9 +104,30 @@ public class TaskManagerDAO {
 	 * @param String password - the password entered by the user
 	 * @return True if user was created, false otherwise
 	 */
-	public Boolean createUser(String username, String firstName, String lastName,
-			String email, String password) {
-		return false;
+	public int createUser(User user) {
+		User u = retrieveUser(user.getNickname());
+		if (u != null) {
+			return RECORD_EXISTS;
+		}
+		try
+        {
+            String sql = "INSERT INTO frank73_s14org.Users(nickname, firstname, " +
+                    "lastname, password) VALUES (?,?,?,?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, user.getNickname());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setString(4, user.getPassword());
+            
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
 	}
 	
 	/**
@@ -91,8 +138,26 @@ public class TaskManagerDAO {
 	 * @return True if the project was created successfully,
 	 * false otherwise.
 	 */
-	public Boolean createProject(String description, int catId, Date deadline) {
-		return false; //TODO: Should a team also be assigned when a project is created?
+	public int createProject(int catId, Date deadline) {
+		//TODO: Should a team also be assigned when a project is created?
+		java.sql.Date sqlDate = new java.sql.Date(deadline.getTime());
+		try
+        {
+            String sql = "INSERT INTO frank73_s14org.Projects(category_id, final_deadline) " + 
+            		"VALUES (?,?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, catId);
+            ps.setDate(2, sqlDate);
+            
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
 	}
 	
 	/**
@@ -101,8 +166,23 @@ public class TaskManagerDAO {
 	 * @return True if the team was created successfully,
 	 * false otherwise.
 	 */
-	public Boolean createTeam(String description) {
-		return false;
+	public int createTeam(String description) {
+		try
+        {
+            String sql = "INSERT INTO frank73_s14org.Teams(description) " + 
+            		"VALUES (?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, description);
+            
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
 	}
 	
 	/**
@@ -111,8 +191,23 @@ public class TaskManagerDAO {
 	 * @return True if the category was created successfully,
 	 * false otherwise.
 	 */
-	public Boolean createCategory(String desctiption) {
-		return false;
+	public int createCategory(String description) {
+		try
+        {
+            String sql = "INSERT INTO frank73_s14org.Categories(description) " + 
+            		"VALUES (?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, description);
+            
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
 	}
 	
 	/**
@@ -126,9 +221,30 @@ public class TaskManagerDAO {
 	 * @return True if the task was created successfully,
 	 * false otherwise.
 	 */
-	public Boolean createTask(String description, Date dueDate, int priority,
-			Date timeEst, int projectId, int userId) {
-		return false;
+	public int createTask(Task task) {
+		java.sql.Date sqlDate = new java.sql.Date(task.getDueDate().getTime());
+		try
+        {
+            String sql = "INSERT INTO frank73_s14org.Tasks(description, due_date, " +
+                    "priority, time_estimate, time_completed, status, project_id) VALUES (?,?,?,?,?,?,?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, task.getDescription());
+            ps.setDate(2, sqlDate);
+            ps.setString(3, task.getPriority());
+            ps.setDouble(4, task.getTimeEstimate());
+            ps.setDouble(5, task.getTimeCompleted());
+            ps.setString(6, task.getStatus());
+            ps.setInt(7, task.getProjectId());
+            
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
 	}
 	
 	/**
@@ -138,8 +254,8 @@ public class TaskManagerDAO {
 	 * @return True if the project was added successfully,
 	 * false otherwise.
 	 */
-	public Boolean addProjectToTeam(Project project, Team team) {
-		return false; // TODO: Can a team also be added to a project?
+	public int addProjectToTeam(Project project, Team team) {
+		return NO_RECORD; // TODO: Can a team also be added to a project?
 	}
 	
 	/**
@@ -149,8 +265,8 @@ public class TaskManagerDAO {
 	 * @return True if the user was added successfully,
 	 * false otherwise.
 	 */
-	public Boolean addUserToTeam(User user, Team team) {
-		return false;
+	public int addUserToTeam(User user, Team team) {
+		return NO_RECORD;
 	}
 	
 	/**
@@ -160,8 +276,8 @@ public class TaskManagerDAO {
 	 * @return True if the task was added successfully,
 	 * false otherwise.
 	 */
-	public Boolean addTaskToUser(Task task, User user) {
-		return false;
+	public int addTaskToUser(Task task, User user) {
+		return NO_RECORD;
 	}
 	
 	/**
@@ -229,57 +345,57 @@ public class TaskManagerDAO {
 		return null;
 	}
 	
-	public Boolean updateUser(int user_id, String username, String firstName, String lastName,
+	public int updateUser(int user_id, String username, String firstName, String lastName,
 			String email, String password) {
-		return false;
+		return NO_RECORD;
 	}
 	
-	public Boolean updateTeam(int team_id, String description) {
-		return false;
+	public int updateTeam(int team_id, String description) {
+		return NO_RECORD;
 	}
 	
-	public Boolean updateProject(int project_id, String description, int catId, Date deadline) {
-		return false;
+	public int updateProject(int project_id, String description, int catId, Date deadline) {
+		return NO_RECORD;
 	}
 	
-	public Boolean updateCategory(int category_id, String description) {
-		return false;
+	public int updateCategory(int category_id, String description) {
+		return NO_RECORD;
 	}
 	
-	public Boolean updateTask(int task_id, String description, Date dueDate, int priority,
+	public int updateTask(int task_id, String description, Date dueDate, int priority,
 			Date timeEst, int projectId, int userId) {
-		return false;
+		return NO_RECORD;
 	}
 	
-	public Boolean deleteUser(User user) {
-		return false;
+	public int deleteUser(User user) {
+		return NO_RECORD;
 	}
 	
-	public Boolean deleteTeam(Team team) {
-		return false;
+	public int deleteTeam(Team team) {
+		return NO_RECORD;
 	}
 	
-	public Boolean deleteProject(Project project) {
-		return false;
+	public int deleteProject(Project project) {
+		return NO_RECORD;
 	}
 	
-	public Boolean deleteCategory(Category category) {
-		return false;
+	public int deleteCategory(Category category) {
+		return NO_RECORD;
 	}
 	
-	public Boolean deleteTask(Task task) {
-		return false;
+	public int deleteTask(Task task) {
+		return NO_RECORD;
 	}
 	
-	public Boolean removeProjectFromTeam(Project project, Team team) {
-		return false;
+	public int removeProjectFromTeam(Project project, Team team) {
+		return NO_RECORD;
 	}
 	
-	public Boolean removeUserFromTeam(User user, Team team) {
-		return false;
+	public int removeUserFromTeam(User user, Team team) {
+		return NO_RECORD;
 	}
 	
-	public Boolean removeTaskFromUser(Task task, User user) {
-		return false;
+	public int removeTaskFromUser(Task task, User user) {
+		return NO_RECORD;
 	}
 }

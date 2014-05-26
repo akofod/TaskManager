@@ -8,9 +8,9 @@ public class Task implements Serializable {
 	private int task_id;
 	private String description;
 	private Date due_date;
-	private int priority;
-	private Date time_estimate;
-	private Date time_completed;
+	private String priority;
+	private double time_estimate;
+	private double time_completed;
 	private String status;
 	private int project_id;
 	public int getId() {
@@ -31,22 +31,22 @@ public class Task implements Serializable {
 	public void setDueDate(Date due_date) {
 		this.due_date = due_date;
 	}
-	public int getPriority() {
+	public String getPriority() {
 		return priority;
 	}
-	public void setPriority(int priority) {
+	public void setPriority(String priority) {
 		this.priority = priority;
 	}
-	public Date getTimeEstimate() {
+	public double getTimeEstimate() {
 		return time_estimate;
 	}
-	public void setTimeEstimate(Date time_estimate) {
+	public void setTimeEstimate(double time_estimate) {
 		this.time_estimate = time_estimate;
 	}
-	public Date getTimeCompleted() {
+	public double getTimeCompleted() {
 		return time_completed;
 	}
-	public void setTimeCompcompleted(Date time_completed) {
+	public void setTimeCompcompleted(double time_completed) {
 		this.time_completed = time_completed;
 	}
 	public String getStatus() {
