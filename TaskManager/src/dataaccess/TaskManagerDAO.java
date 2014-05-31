@@ -1,13 +1,14 @@
 package dataaccess;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 import model.Category;
 import model.Project;
@@ -19,10 +20,8 @@ public class TaskManagerDAO {
 	private final int NO_RECORD = -1;
 	private final int RECORD_EXISTS = 0;
 	private final int SUCCESS = 1;
-	private String userid = "frank73_s14org";      //TODO: We will need to determine how we want to
-	private String password = "org2014";          //get the userid, password and url into the DAO.
-	private String url = "jdbc:mysql://s14org.franklinpracticum.com";
 	private Connection con;
+	DataSource ds;
 	
 	/**
 	 * Constructor for TaskManagerDAO objects.
@@ -39,27 +38,15 @@ public class TaskManagerDAO {
 	 */
 	public Connection getConnection() {
 		try {
-            Class.forName("com.mysql.jdbc.Driver");
+			Context cxt = new InitialContext();
+			ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/pbcart" );
+			con = ds.getConnection();
+			return con;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        } catch (java.lang.ClassNotFoundException e) {
-            System.err.println("ClassNotFoundException: " + e.getMessage());
-        }
-
-        try {
-            con = DriverManager.getConnection(url, userid, password);
-        } catch (SQLException e) {
-        	try {
-                con = DriverManager.getConnection(url, userid, password);
-            } catch (SQLException ex) {
-            	try {
-                    con = DriverManager.getConnection(url, userid, password);
-                } catch (SQLException exc) {
-                    System.err.println("SQLException: " + exc.getMessage());
-                }
-            }
-        }
-
-        return con;
+        return null;
 	}
 	
 	/**
