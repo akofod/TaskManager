@@ -39,7 +39,7 @@ public class TaskManagerDAO {
 	public Connection getConnection() {
 		try {
 			Context cxt = new InitialContext();
-			ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/pbcart" );
+			ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/TaskManager" );
 			con = ds.getConnection();
 			return con;
 		} catch (Exception e) {
