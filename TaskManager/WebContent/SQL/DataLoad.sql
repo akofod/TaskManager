@@ -7,9 +7,9 @@ DELETE FROM UserTeam;
 DELETE FROM Teams;
 DELETE FROM Users;
 
-INSERT INTO Users VALUES ('steve','steve','steve','sherman','steve');
-INSERT INTO Users VALUES ('paul','paul','paul','bernard','paul');
-INSERT INTO Users VALUES ('andy','andy','andy','kofod','andy');
+INSERT INTO Users VALUES ('sherma14@email.franklin.edu','steve','steve','sherman','steve');
+INSERT INTO Users VALUES ('bernar15@email.franklin.edu','paul','paul','bernard','paul');
+INSERT INTO Users VALUES ('kofod01@email.franklin.edu','andy','andy','kofod','andy');
 
 INSERT INTO Teams VALUES (1,'Team 1');
 INSERT INTO Teams VALUES (2,'Team 2');
@@ -17,12 +17,12 @@ INSERT INTO Teams VALUES (3,'Team 3');
 INSERT INTO Teams VALUES (4,'Team 4');
 INSERT INTO Teams VALUES (5,'Team 5');
 
-INSERT INTO UserTeam VALUES ('steve',2);
-INSERT INTO UserTeam VALUES ('steve',4);
-INSERT INTO UserTeam VALUES ('paul',1);
-INSERT INTO UserTeam VALUES ('paul',3);
-INSERT INTO UserTeam VALUES ('andy',2);
-INSERT INTO UserTeam VALUES ('andy',5);
+INSERT INTO UserTeam VALUES ('sherma14@email.franklin.edu',2);
+INSERT INTO UserTeam VALUES ('sherma14@email.franklin.edu',4);
+INSERT INTO UserTeam VALUES ('bernar15@email.franklin.edu',1);
+INSERT INTO UserTeam VALUES ('bernar15@email.franklin.edu',3);
+INSERT INTO UserTeam VALUES ('kofod01@email.franklin.edu',2);
+INSERT INTO UserTeam VALUES ('kofod01@email.franklin.edu',5);
 
 INSERT INTO Categories VALUES (1,'Development');
 INSERT INTO Categories VALUES (2,'Maintenance');
@@ -55,12 +55,12 @@ INSERT INTO Tasks VALUES (10,'Work on Maintenance 2','2014-08-15','Medium',8,5.2
 INSERT INTO Tasks VALUES (11,'Work on Other 1','2015-07-31','Medium',35.5,5.25,'Open',6);
 INSERT INTO Tasks VALUES (12,'Work on Other 2','2014-12-31','High',55,5.25,'Open',6);
 
-INSERT INTO UserTask VALUES ('steve',1);
-INSERT INTO UserTask VALUES ('steve',3);
-INSERT INTO UserTask VALUES ('steve',5);
-INSERT INTO UserTask VALUES ('paul',2);
-INSERT INTO UserTask VALUES ('paul',4);
-INSERT INTO UserTask VALUES ('paul',6);
-INSERT INTO UserTask VALUES ('andy',7);
-INSERT INTO UserTask VALUES ('andy',9);
-INSERT INTO UserTask VALUES ('andy',11);
+INSERT INTO UserTask VALUES ('sherma14@email.franklin.edu',1);
+INSERT INTO UserTask VALUES ('sherma14@email.franklin.edu',3);
+INSERT INTO UserTask VALUES ('sherma14@email.franklin.edu',5);
+INSERT INTO UserTask VALUES ('bernar15@email.franklin.edu',2);
+INSERT INTO UserTask VALUES ('bernar15@email.franklin.edu',4);
+INSERT INTO UserTask VALUES ('bernar15@email.franklin.edu',6);
+INSERT INTO UserTask VALUES ('kofod01@email.franklin.edu',7);
+INSERT INTO UserTask VALUES ('kofod01@email.franklin.edu',9);
+INSERT INTO UserTask VALUES ('kofod01@email.franklin.edu',11);
