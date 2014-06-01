@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -354,6 +353,26 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
+	public int updatePassword(String userName, String oldPass, String newPass) {
+		if(authenticateUser(userName, oldPass)==1 && validatePassword(newPass) == 1)
+		{	
+			try
+			{
+				String sql = "Update frank73_s14org.Users set password=? where nickname=?";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1, newPass);
+				ps.setString(2, userName);
+				ps.executeUpdate();
+				return SUCCESS;
+			}
+			catch (Exception e){
+				System.out.println(e);
+	            return NO_RECORD;
+			}
+		}
+		return NO_RECORD;
+	}
+	
 	public int deleteUser(User user) {
 		return NO_RECORD;
 	}
@@ -383,6 +402,31 @@ public class TaskManagerDAO {
 	}
 	
 	public int removeTaskFromUser(Task task, User user) {
+		return NO_RECORD;
+	}
+	
+	public int validatePassword(String strPass) {
+		int passLength = strPass.trim().length();
+		boolean hasUpper = false;
+		boolean hasLower = false;
+		int hasSpace = strPass.indexOf(" ");
+		if (passLength > 7 && hasSpace == -1)
+		{
+			for(int i=0; i<passLength; i++) {
+		        if(Character.isUpperCase(strPass.charAt(i))) {
+		            hasUpper = true;
+		        }
+		    }
+			for(int i=0; i<passLength; i++) {
+		        if(Character.isLowerCase(strPass.charAt(i))) {
+		            hasLower = true;
+		        }
+		    }
+			if (hasUpper && hasLower)
+			{
+				return SUCCESS;
+			}
+		}
 		return NO_RECORD;
 	}
 }
