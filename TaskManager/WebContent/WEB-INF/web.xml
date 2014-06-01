@@ -20,6 +20,16 @@
   	<url-pattern>/AuthServletTest</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>LoginLogoutAjax</servlet-name>
+  	<servlet-class>control.LoginLogoutAjax</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+  	<servlet-name>LoginLogoutAjax</servlet-name>
+  	<url-pattern>/LoginLogoutAjax</url-pattern>
+  </servlet-mapping>
+  
   <filter>
   	<filter-name>AuthFilter</filter-name>
   	<filter-class>control.AuthFilter</filter-class>
