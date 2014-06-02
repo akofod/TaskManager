@@ -2,6 +2,7 @@ package control;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +23,16 @@ public class RegisterNewUserAjax extends HttpServlet{
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher rd;
 		String email = request.getParameter("email");
 		String nickname = request.getParameter("nickname");
 		String firstname = request.getParameter("firstname");
 		String lastname = request.getParameter("lastname");
 		String password = request.getParameter("password");
-		//TaskManagerDAO dao = new TaskManagerDAO();
+		//TODO: DAO connection is not working
+		//Throws error: javax.naming.NameNotFoundException: Name [jdbc/TaskManager] is not bound in this Context. Unable to find [jdbc].
+		//Error originates at TaskManagerDAO line 46.
+		TaskManagerDAO dao = new TaskManagerDAO();
 		User user = new User();
 		user.setId(email);
 		user.setNickname(nickname);
@@ -35,8 +40,17 @@ public class RegisterNewUserAjax extends HttpServlet{
 		user.setLastName(lastname);
 		user.setPassword(password);
 		
-		//dao.createUser(user);
+		dao.createUser(user);
 		
-		request.getRequestDispatcher("authTest.jsp").forward(request, response);
+		User search = dao.retrieveUser(email);
+		if (search.getId().equals(email)) {
+			request.setAttribute("error", "This email address is already registered.");
+			rd = request.getRequestDispatcher("registration.jsp");
+		}
+		else {
+			rd = request.getRequestDispatcher("authTest.jsp");
+		}
+		
+		rd.forward(request, response);
 	}
 }
