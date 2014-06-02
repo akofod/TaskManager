@@ -102,7 +102,7 @@ public class TaskManagerDAO {
 		}
 		try
         {
-            String sql = "INSERT INTO frank73_s14org.Users(nickname, firstname, " +
+            String sql = "INSERT INTO Users(nickname, firstname, " +
                     "lastname, password) VALUES (?,?,?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -300,11 +300,12 @@ public class TaskManagerDAO {
 	public User retrieveUser(String id) {
 		User user = new User();
 		try {
-            String sql = "SELECT * FROM mediamanager.mediatype WHERE user_id = " + id;
+            String sql = "SELECT * FROM users WHERE user_id = ?";
 
-            Statement s = con.createStatement();
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, id);
 
-            ResultSet rs = s.executeQuery(sql);
+            ResultSet rs = s.executeQuery();
 
             String user_id, nname, fname, lname, pass;
             if (rs.next()) {

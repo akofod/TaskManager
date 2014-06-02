@@ -41,7 +41,7 @@ public class RegisterNewUserAjax extends HttpServlet{
 		user.setPassword(password);
 		
 		User search = dao.retrieveUser(email);
-		if (search.getId().equals(email)) {
+		if (email.equals(search.getId())) {
 			request.setAttribute("error", "This email address is already registered.");
 			rd = request.getRequestDispatcher("registration.jsp");
 		}
