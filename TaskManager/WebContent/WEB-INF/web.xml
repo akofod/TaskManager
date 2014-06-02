@@ -30,6 +30,16 @@
   	<url-pattern>/LoginLogoutAjax</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>Registration</servlet-name>
+    <servlet-class>control.RegisterNewUserAjax</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Registration</servlet-name>
+    <url-pattern>/register.do</url-pattern>
+  </servlet-mapping>
+  
   <filter>
   	<filter-name>AuthFilter</filter-name>
   	<filter-class>control.AuthFilter</filter-class>

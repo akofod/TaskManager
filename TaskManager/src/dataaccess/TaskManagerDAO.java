@@ -1,10 +1,14 @@
 package dataaccess;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -28,6 +32,7 @@ public class TaskManagerDAO {
 	public TaskManagerDAO() {
 		getConnection();
 	}
+	
 	
 	/**
 	 * Establishes connection with database.
@@ -287,12 +292,39 @@ public class TaskManagerDAO {
 		return null;
 	}
 	
-	public User retrieveUser(int id) {
-		return null;
-	}
-	
-	public User retrieveUser(String nickname) {
-		return null;
+	/**
+	 * Retrieves a User object from the database.
+	 * @param id The user_id to retrieve.
+	 * @return The specified User object.
+	 */
+	public User retrieveUser(String id) {
+		User user = new User();
+		try {
+            String sql = "SELECT * FROM mediamanager.mediatype WHERE user_id = " + id;
+
+            Statement s = con.createStatement();
+
+            ResultSet rs = s.executeQuery(sql);
+
+            String user_id, nname, fname, lname, pass;
+            if (rs.next()) {
+            	 user_id = rs.getString("user_id");
+                 nname = rs.getString("nickname");
+                 fname = rs.getString("firstname");
+                 lname = rs.getString("lastname");
+                 pass = rs.getString("password");
+                 
+                 user.setId(user_id);
+                 user.setNickname(nname);
+                 user.setFirstName(fname);
+                 user.setLastName(lname);
+                 user.setPassword(pass);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return user;
 	}
 	
 	public ArrayList<User> retrieveUsers(Project project) {

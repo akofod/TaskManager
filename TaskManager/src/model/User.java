@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private int user_id;
+	private String user_id;
 	private String nickname;
 	private String firstname;
 	private String lastname;
@@ -14,10 +14,10 @@ public class User implements Serializable {
 	private ArrayList<Team> teams; //TODO: Can a user be a member of more than one team?
 	private ArrayList<Task> allTasks;
 	
-	public int getId() {
+	public String getId() {
 		return user_id;
 	}
-	public void setId(int user_id) {
+	public void setId(String user_id) {
 		this.user_id = user_id;
 	}
 	public String getNickname() {
