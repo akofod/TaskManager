@@ -102,15 +102,16 @@ public class TaskManagerDAO {
 		}
 		try
         {
-            String sql = "INSERT INTO Users(nickname, firstname, " +
-                    "lastname, password) VALUES (?,?,?,?) ";
+            String sql = "INSERT INTO Users(user_id, nickname, firstname, " +
+                    "lastname, password) VALUES (?,?,?,?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setString(1, user.getNickname());
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
-            ps.setString(4, user.getPassword());
+            ps.setString(1, user.getId());
+            ps.setString(2, user.getNickname());
+            ps.setString(3, user.getFirstName());
+            ps.setString(4, user.getLastName());
+            ps.setString(5, user.getPassword());
             
             ps.executeUpdate();
             return SUCCESS;
