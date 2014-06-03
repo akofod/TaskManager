@@ -29,11 +29,9 @@ public class RegisterNewUserAjax extends HttpServlet{
 		String firstname = request.getParameter("firstname");
 		String lastname = request.getParameter("lastname");
 		String password = request.getParameter("password");
-		//TODO: DAO connection is not working
-		//Throws error: javax.naming.NameNotFoundException: Name [jdbc/TaskManager] is not bound in this Context. Unable to find [jdbc].
-		//Error originates at TaskManagerDAO line 46.
 		TaskManagerDAO dao = new TaskManagerDAO();
 		User user = new User();
+		
 		user.setId(email);
 		user.setNickname(nickname);
 		user.setFirstName(firstname);
@@ -43,6 +41,10 @@ public class RegisterNewUserAjax extends HttpServlet{
 		User search = dao.retrieveUser(email);
 		if (email.equals(search.getId())) {
 			request.setAttribute("error", "This email address is already registered.");
+			rd = request.getRequestDispatcher("registration.jsp");
+		}
+		else if(dao.isNicknameUsed(nickname)) {
+			request.setAttribute("error", "That nickname is already being used.\nPlease select a different nickname.");
 			rd = request.getRequestDispatcher("registration.jsp");
 		}
 		else {

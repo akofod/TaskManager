@@ -1,11 +1,9 @@
 package dataaccess;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -96,13 +94,13 @@ public class TaskManagerDAO {
 	 * @return True if user was created, false otherwise
 	 */
 	public int createUser(User user) {
-		User u = retrieveUser(user.getNickname());
-		if (u != null) {
+		User u = retrieveUser(user.getId());
+		if (u.getId() != null) {
 			return RECORD_EXISTS;
 		}
 		try
         {
-            String sql = "INSERT INTO Users(user_id, nickname, firstname, " +
+            String sql = "INSERT INTO users(user_id, nickname, firstname, " +
                     "lastname, password) VALUES (?,?,?,?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -135,7 +133,7 @@ public class TaskManagerDAO {
 		java.sql.Date sqlDate = new java.sql.Date(deadline.getTime());
 		try
         {
-            String sql = "INSERT INTO frank73_s14org.Projects(category_id, final_deadline) " + 
+            String sql = "INSERT INTO Projects(category_id, final_deadline) " + 
             		"VALUES (?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -161,7 +159,7 @@ public class TaskManagerDAO {
 	public int createTeam(String description) {
 		try
         {
-            String sql = "INSERT INTO frank73_s14org.Teams(description) " + 
+            String sql = "INSERT INTO Teams(description) " + 
             		"VALUES (?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -186,7 +184,7 @@ public class TaskManagerDAO {
 	public int createCategory(String description) {
 		try
         {
-            String sql = "INSERT INTO frank73_s14org.Categories(description) " + 
+            String sql = "INSERT INTO Categories(description) " + 
             		"VALUES (?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -217,7 +215,7 @@ public class TaskManagerDAO {
 		java.sql.Date sqlDate = new java.sql.Date(task.getDueDate().getTime());
 		try
         {
-            String sql = "INSERT INTO frank73_s14org.Tasks(description, due_date, " +
+            String sql = "INSERT INTO Tasks(description, due_date, " +
                     "priority, time_estimate, time_completed, status, project_id) VALUES (?,?,?,?,?,?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -462,5 +460,25 @@ public class TaskManagerDAO {
 			}
 		}
 		return NO_RECORD;
+	}
+	
+	public boolean isNicknameUsed(String nickname) {
+		boolean used = false;
+		try {
+            String sql = "SELECT * FROM users WHERE nickname = ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, nickname);
+
+            ResultSet rs = s.executeQuery();
+
+            if (rs.next()) {
+            	 used = true;
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return used;
 	}
 }
