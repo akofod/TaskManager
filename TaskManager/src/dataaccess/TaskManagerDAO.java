@@ -73,7 +73,7 @@ public class TaskManagerDAO {
 	public int authenticateUser(String username, String password) {
 		User user = retrieveUser(username);
 		if (user != null) {
-			if (user.getNickname().equals(username) && user.getPassword().equals(password)) {
+			if (user.getId().equals(username) && user.getPassword().equals(password)) {
 				return SUCCESS;
 			}
 			else {
@@ -390,7 +390,7 @@ public class TaskManagerDAO {
 		{	
 			try
 			{
-				String sql = "Update frank73_s14org.Users set password=? where nickname=?";
+				String sql = "Update users set password=? where nickname=?";
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, newPass);
 				ps.setString(2, userName);
