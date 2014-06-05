@@ -72,7 +72,7 @@ public class TaskManagerDAO {
 	 */
 	public int authenticateUser(String username, String password) {
 		User user = retrieveUser(username);
-		if (user != null) {
+		if (user.getId() != null) {
 			if (user.getId().equals(username) && user.getPassword().equals(password)) {
 				return SUCCESS;
 			}
