@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet Filter implementation class AuthFilter
  */
-@WebFilter("/AuthFilter")
+@WebFilter("/admin/*")
 public class AuthFilter implements Filter {
 	
 	@SuppressWarnings("unused")
