@@ -38,8 +38,8 @@ function getHTML(strAction)
 </head>
 
 <table>
-	<tr><td>User ID:</td><td><input type="text" style="width: 200px" id="username" /></td>
-	<tr><td>Password:</td><td><input type="password" style="width: 200px" id="password"></td>
+	<tr><td>User ID:</td><td><input type="text" style="width: 200px" id="username" value=${userIdCookie}></td>
+	<tr><td>Password:</td><td><input type="password" style="width: 200px" id="password" value=${userPassCookie}></td>
 	<td><input type="checkbox" style="width: 20px" id="remember">Remember Me</td></tr>
 	<tr><td><input type="button" style="width: 200px" id="login" value="Login"></td>
 	<td><input type="button" style="width: 200px" id="logout" value="Logout"></td></tr>
