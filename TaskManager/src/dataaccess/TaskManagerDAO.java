@@ -327,6 +327,37 @@ public class TaskManagerDAO {
 		return user;
 	}
 	
+	public User retrieveUserByNickname(String nickname) {
+		User user = new User();
+		try {
+            String sql = "SELECT * FROM users WHERE nickname = ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, nickname);
+
+            ResultSet rs = s.executeQuery();
+
+            String user_id, nname, fname, lname, pass;
+            if (rs.next()) {
+            	 user_id = rs.getString("user_id");
+                 nname = rs.getString("nickname");
+                 fname = rs.getString("firstname");
+                 lname = rs.getString("lastname");
+                 pass = rs.getString("password");
+                 
+                 user.setId(user_id);
+                 user.setNickname(nname);
+                 user.setFirstName(fname);
+                 user.setLastName(lname);
+                 user.setPassword(pass);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return user;
+	}
+	
 	public ArrayList<User> retrieveUsers(Project project) {
 		return null;
 	}

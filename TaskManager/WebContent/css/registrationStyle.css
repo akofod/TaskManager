@@ -1,0 +1,44 @@
+@CHARSET "ISO-8859-1";
+
+#registrationForm label {
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+}
+
+#registrationForm div {
+	margin-top: 1em;
+}
+
+#registrationForm textarea{
+    vertical-align: top;
+    height: 5em;
+}
+
+#buttons {
+	padding-top: 10px;
+	padding-left: 30px;
+}
+
+.error{
+    display: none;
+    margin-left: 10px;
+}      
+ 
+.error_show{
+    color: red;
+    margin-left: 10px;
+}
+
+input.invalid, textarea.invalid{
+    border: 2px solid red;
+}
+ 
+input.valid, textarea.valid{
+    border: 2px solid green;
+}
+
+#error_text {
+	color: red;
+	padding-left: 20px;	
+}

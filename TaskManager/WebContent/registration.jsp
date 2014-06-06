@@ -4,75 +4,147 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="./css/registrationStyle.css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 <title>New User Registration</title>
-<script>function cancel() {window.location.replace("index.jsp");}
-        function clearForm() {document.getElementById("registrationForm").reset();}
-        function validateForm() {
-        	var user_id = document.forms["registrationForm"]["email"].value;
-        	var nickname = document.forms["registrationForm"]["nickname"].value;
-        	var password = document.forms["registrationForm"]["password"].value;
-        	var confirm = document.forms["registrationForm"]["confirm"].value;
-        	var atpos = user_id.indexOf("@");
-        	var dotpos = user_id.lastIndexOf(".");
-        	if (user_id == null || user_id == "") {
-        		alert("A valid email address is required.");
-        		return false;
-        	}
-        	if (nickname == null || nickname == "") {
-        		alert("Nickname is required.");
-        		return false;
-        	}
-        	if (nickname.length < 6 || nickname.length > 15) {
-        		alert("Nickname must be between 6 and 15 characters.");
-        		return false;
-        	}
-        	if (password == null || password == "") {
-        		alert("You must enter a password.");
-        		return false;
-        	}
-        	if (password != confirm) {
-        		alert("Password does not match.");
-        		return false;
-        	}
-        	if (password.length < 8) {
-        		alert("Password must be at least 8 characters long.");
-                return false;
-        	}
-        	if (atpos < 1 || (atpos + 2) > user_id.lastIndexOf(".") || (dotpos + 2) >= user_id.length) {
-                alert("Not a valid e-mail address.");
-                return false;
-            }
-        	var alphaNumeric = /^[a-z0-9]+$/i;
-        	if (!(alphaNumeric.test(nickname))) {
-        		alert("Nickname may only contain letters and numbers.");
-        		return false;
-        	}
-        	if ((password.search(/\d/) == -1) || (password.search(/[A-Z]/) == -1) || (password.search(/[a-z]/) == -1)) {
-        		alert("Password must contain at least one uppercase letter, one lowercase letter and one number.");
-        		return false;
-        	}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#email').on('input', function() {
+	    var input=$(this);
+	    var re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+	    var is_email=re.test(input.val());
+	    if(is_email){input.removeClass("invalid").addClass("valid");}
+	    else{input.removeClass("valid").addClass("invalid");}
+	});
+	$('#nickname').on('input', function() {
+	    var input=$(this);
+	    var re=/^[a-zA-Z0-9]{6,15}$/;
+	    var is_name=re.test(input.val());
+	    if(is_name){input.removeClass("invalid").addClass("valid");}
+	    else{input.removeClass("valid").addClass("invalid");}
+	});
+	$('#password').on('input', function() {
+		var input=$(this);
+		var re=/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+		var is_password=re.test(input.val());
+		if(is_password){input.removeClass("invalid").addClass("valid");}
+		else{input.removeClass("valid").addClass("invalid");}
+	});
+	$('#confirm').on('input', function() {
+		var input=$(this);
+		var text = input.val();
+		var pass = $('#password').val();
+		if(text == pass){input.removeClass("invalid").addClass("valid");}
+		else{input.removeClass("valid").addClass("invalid");}
+	});
+	$('#email').on('blur', function() {
+		var input=$(this);
+		var valid=input.hasClass("valid");
+		var error_element=$('span', $('#email').parent());
+		if (!valid) {
+			error_element.removeClass("error").addClass("error_show");
+		}
+		else {
+			error_element.removeClass("error_show").addClass("error");
+		}
+	});
+	$('#nickname').on('blur', function() {
+        var input=$(this);
+        var valid=input.hasClass("valid");
+        var error_element=$('span', $('#nickname').parent());
+        if (!valid) {
+            error_element.removeClass("error").addClass("error_show");
         }
+        else {
+            error_element.removeClass("error_show").addClass("error");
+        }
+    });
+	$('#password').on('blur', function() {
+        var input=$(this);
+        var valid=input.hasClass("valid");
+        var error_element=$('span', $('#password').parent());
+        if (!valid) {
+            error_element.removeClass("error").addClass("error_show");
+        }
+        else {
+            error_element.removeClass("error_show").addClass("error");
+        }
+    });
+	$('#confirm').on('blur', function() {
+        var input=$(this);
+        var valid=input.hasClass("valid");
+        var error_element=$('span', $('#confirm').parent());
+        if (!valid) {
+            error_element.removeClass("error").addClass("error_show");
+        }
+        else {
+            error_element.removeClass("error_show").addClass("error");
+        }
+    });
+	$("#submit").click(function(event){
+	    var error_free=true;
+	    if ($('#email').hasClass("invalid")) {
+	    	error_free=false;
+	    }
+	    if ($('#nickname').hasClass("invalid")) {
+            error_free=false;
+        }
+	    if ($('#password').hasClass("invalid")) {
+            error_free=false;
+        }
+	    if ($('#confirm').hasClass("invalid")) {
+            error_free=false;
+        }
+	    if (!error_free){
+	        event.preventDefault();
+	    }
+	});
+
+
+});
+
 </script>
 </head>
 <body>
-    <b>${error}</b> <br/><br/>
-    <form id="registrationForm" method="POST" action="register.do" onsubmit="return validateForm()">
-        Email: <br/>
-        <input id="email" type="text" style="width: 200px" name="email" /><br/>
-        Nickname (Must be 6-15 characters, numbers and letters only): <br/>
-        <input id="nickname" type="text" style="width: 200px" name="nickname" /><br/>
-        First Name: <br/>
-        <input id="firstname" type="text" style="width: 200px" name="firstname" /><br/>
-        Last Name: <br/>
-        <input id="lastname" type="text" style="width: 200px" name="lastname" /><br/>
-        Password: <br/>
-        <input autocomplete="off" id="password" type="password" style="width: 200px" name="password" /><br/>
-        Confirm Password: <br/>
-        <input autocomplete="off" id="confirm" type="password" style="width: 200px" name="confirm" /><br/>
-        <input type="submit" style="width: 200px" name="action" value="Register" />
-        <input type="button" style="width: 200px" value="Reset" onclick=clearForm() />
-        <input type="button" style="width: 200px" value="Cancel" onclick=cancel() />
-        
+    <h2>New User Registration</h2>
+    <form id="registrationForm" method="POST" action="register.do">
+        <div>
+            <label for="email">Email:</label>
+            <input id="email" type="email" style="width: 150px" name="email" />
+            <span class="error">A valid email address is required</span>
+        </div>
+        <div>
+            <label for="nickname">Nickname:</label>
+            <input id="nickname" type="text" style="width: 150px" name="nickname" />
+            <span class="error">Nickname must be 6-15 characters, numbers and letters only</span>
+        </div>
+        <div>
+            <label for="firstname">First Name:</label>
+            <input id="firstname" type="text" style="width: 150px" name="firstname" />
+            <span class="error"></span>
+        </div>
+        <div>
+            <label for="lastname">Last Name:</label>
+            <input id="lastname" type="text" style="width: 150px" name="lastname" />
+            <span class="error"></span>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input autocomplete="off" id="password" type="password" style="width: 150px" name="password" />
+            <span class="error">Password must be at least 8 characters, with at least one capital letter, one lowercase letter, and one number</span>
+        </div>
+        <div>
+            <label for="confirm">Confirm Password:</label>
+            <input autocomplete="off" id="confirm" type="password" style="width: 150px" name="confirm" />
+            <span class="error">Does not match password</span>
+        </div>
+        <div id="buttons">
+            <input type="submit" style="width: 100px" id="submit" value="Submit">
+            <input type="reset" style="width: 100px" id="reset" value="Reset"/>
+            <input type="button" style="width: 100px" id="cancel" value="Cancel"/>
+        </div>
+        <div id="error_text">${error}</div>
     </form>
+    
 </body>
 </html>
