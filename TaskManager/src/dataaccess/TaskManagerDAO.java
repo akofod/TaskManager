@@ -1,5 +1,7 @@
 package dataaccess;
 
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -73,15 +75,15 @@ public class TaskManagerDAO {
 	public int authenticateUser(String username, String password) {
 		User user = retrieveUser(username);
 		if (user.getId() != null) {
-			if (user.getId().equals(username) && user.getPassword().equals(password)) {
+			String hashPass = getSecurePassword(password, user.getSalt());
+			if (user.getId().equals(username) && user.getPassword().equals(hashPass)) {
 				return SUCCESS;
 			}
 			else {
 				return RECORD_EXISTS;
 			}
 		}
-		return NO_RECORD;
-			
+		return NO_RECORD;		
 	}
 	
 	/**
@@ -101,15 +103,18 @@ public class TaskManagerDAO {
 		try
         {
             String sql = "INSERT INTO users(user_id, nickname, firstname, " +
-                    "lastname, password) VALUES (?,?,?,?,?) ";
+                    "lastname, password, salt) VALUES (?,?,?,?,?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
-
+            String salt = getSalt();
+            String hashPass = getSecurePassword(user.getPassword(), salt);
+            
             ps.setString(1, user.getId());
             ps.setString(2, user.getNickname());
             ps.setString(3, user.getFirstName());
             ps.setString(4, user.getLastName());
-            ps.setString(5, user.getPassword());
+            ps.setString(5, hashPass);
+            ps.setString(6, salt);
             
             ps.executeUpdate();
             return SUCCESS;
@@ -306,19 +311,21 @@ public class TaskManagerDAO {
 
             ResultSet rs = s.executeQuery();
 
-            String user_id, nname, fname, lname, pass;
+            String user_id, nname, fname, lname, pass, salt;
             if (rs.next()) {
             	 user_id = rs.getString("user_id");
                  nname = rs.getString("nickname");
                  fname = rs.getString("firstname");
                  lname = rs.getString("lastname");
                  pass = rs.getString("password");
+                 salt = rs.getString("salt");
                  
                  user.setId(user_id);
                  user.setNickname(nname);
                  user.setFirstName(fname);
                  user.setLastName(lname);
                  user.setPassword(pass);
+                 user.setSalt(salt);
             }
         }
         catch(Exception e){
@@ -337,19 +344,21 @@ public class TaskManagerDAO {
 
             ResultSet rs = s.executeQuery();
 
-            String user_id, nname, fname, lname, pass;
+            String user_id, nname, fname, lname, pass, salt;
             if (rs.next()) {
             	 user_id = rs.getString("user_id");
                  nname = rs.getString("nickname");
                  fname = rs.getString("firstname");
                  lname = rs.getString("lastname");
                  pass = rs.getString("password");
+                 salt = rs.getString("salt");
                  
                  user.setId(user_id);
                  user.setNickname(nname);
                  user.setFirstName(fname);
                  user.setLastName(lname);
                  user.setPassword(pass);
+                 user.setSalt(salt);
             }
         }
         catch(Exception e){
@@ -421,10 +430,13 @@ public class TaskManagerDAO {
 		{	
 			try
 			{
-				String sql = "Update users set password=? where nickname=?";
+				String sql = "Update users set password=?, salt=? where user_id=?";
 				PreparedStatement ps = con.prepareStatement(sql);
-				ps.setString(1, newPass);
-				ps.setString(2, userName);
+				String salt = getSalt();
+				String newPassSecure = getSecurePassword(newPass, salt);
+				ps.setString(1, newPassSecure);
+				ps.setString(2, salt);
+				ps.setString(3, userName);
 				ps.executeUpdate();
 				return SUCCESS;
 			}
@@ -512,4 +524,34 @@ public class TaskManagerDAO {
         }
 		return used;
 	}
+	
+	public String getSecurePassword(String passwordToHash, String salt)
+    {
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            md.update(salt.getBytes());
+            byte[] bytes = md.digest(passwordToHash.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
+	
+	public String getSalt() throws Exception
+    {
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
+        return salt.toString();
+    }
+	
 }

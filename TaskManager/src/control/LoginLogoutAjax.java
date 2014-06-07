@@ -28,7 +28,7 @@ public class LoginLogoutAjax extends HttpServlet {
 		String user = request.getParameter("user");	
 		String pass = request.getParameter("password");	
 		String action = request.getParameter("reqAction");	
-		String remem = request.getParameter("rememberMe");	//still need to implement this portion
+		String remem = request.getParameter("rememberMe");
 		String message = "";
 		TaskManagerDAO dao = new TaskManagerDAO();
 		if (action.equalsIgnoreCase("login"))
@@ -36,36 +36,20 @@ public class LoginLogoutAjax extends HttpServlet {
 			if (dao.authenticateUser(user, pass)==1){
 				User authUser = dao.retrieveUser(user);
 				request.getSession(true).setAttribute("user", authUser);
+				String hashPass = authUser.getPassword();
+				//cookie clean up
+				deleteCookies(request, response, user, hashPass);
+				//create new cookies
 				if (remem.equalsIgnoreCase("true")) {
 					//set cookie for remember me functionality on next visit
 					Cookie userId = new Cookie("user_id", user);
-					Cookie userPass = new Cookie("user_pass", pass);
+					Cookie userPass = new Cookie("user_pass", hashPass);
 					//30 day life
 					userId.setMaxAge(60*60*24*30); 
 				    userPass.setMaxAge(60*60*24*30);
 				    //add cookie
 				    response.addCookie(userId);
 					response.addCookie(userPass);
-				}
-				else {
-					//remember me option not checked
-					//delete the cookie if exists
-					Cookie cookie = null;
-					Cookie[] cookies = null;
-					cookies = request.getCookies();
-					if(cookies != null) {
-						for (int i = 0; i < cookies.length; i++){
-							cookie = cookies[i];
-							if (cookie.getName().equals("user_id") && cookie.getValue().equals(user)) {
-								cookie.setMaxAge(0);
-								response.addCookie(cookie);
-							}
-							if (cookie.getName().equals("user_pass") && cookie.getValue().equals(pass)) {
-								cookie.setMaxAge(0);
-								response.addCookie(cookie);
-							}
-						}
-					}
 				}
 				 
 				message = "You have successfully logged in, " + user;
@@ -78,11 +62,31 @@ public class LoginLogoutAjax extends HttpServlet {
 		}
 		else
 		{
+			deleteCookies(request, response, user, dao.retrieveUser(user).getPassword());
 			request.getSession(true).invalidate();
 			message = "You have successfully logged out.";
 		}
 		DataOutputStream out = new DataOutputStream(response.getOutputStream());
 		response.setContentType("text/plain");
 		out.writeBytes(message);
+	}
+	
+	public void deleteCookies (HttpServletRequest request, HttpServletResponse response, String user, String hashPass) {
+		Cookie cookie = null;
+		Cookie[] cookies = null;
+		cookies = request.getCookies();
+		if(cookies != null) {
+			for (int i = 0; i < cookies.length; i++){
+				cookie = cookies[i];
+				if (cookie.getName().equals("user_id") && cookie.getValue().equals(user)) {
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+				}
+				if (cookie.getName().equals("user_pass") && cookie.getValue().equals(hashPass)) {
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+				}
+			}
+		}
 	}
 }
