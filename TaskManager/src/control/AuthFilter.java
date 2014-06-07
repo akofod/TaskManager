@@ -38,12 +38,23 @@ public class AuthFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;		
 		HttpSession session = httpRequest.getSession(true);
 		String redirectURL = httpRequest.getContextPath() + "/login.jsp";
-		User user = getUserFromCookies(httpRequest);
+		User user = null;
 		
-		if (user.getId() != null) {
-			session.setAttribute("user", user);
+		//check to see if user session attribute is set
+		if (session.getAttribute("user") == null)
+		{
+			//not set, try getting user from cookies
+			user = getUserFromCookies(httpRequest);			
+			if (user.getId() != null) {
+				//if found in cookies, set session attribute
+				session.setAttribute("user", user);
+			}
 		}
-			
+		else
+		{
+			//System.out.println("User attribute set");
+		}
+
 		if (httpRequest.getRequestURI().equals(redirectURL) || session.getAttribute("user") != null) {
 		    chain.doFilter(request, response);
 		} 
@@ -68,12 +79,16 @@ public class AuthFilter implements Filter {
 		if(cookies != null) {
 			for (int i = 0; i < cookies.length; i++){
 				cookie = cookies[i];
-				if (cookie.getName().equals("user_id")) {
+				if (cookie.getName().equals("user_id_TaskManager_Su14")) {
 					userName = cookie.getValue();
+					//System.out.println(cookie.getValue());
+					//System.out.println(cookie.getMaxAge());
 					user = dao.retrieveUser(userName);
 				}
-				if (cookie.getName().equals("user_pass")) {
+				if (cookie.getName().equals("user_pass_TaskManager_Su14")) {
 					hashPass = cookie.getValue();
+					//System.out.println(cookie.getValue());
+					//System.out.println(cookie.getMaxAge());
 				}
 			}
 		}
