@@ -554,4 +554,53 @@ public class TaskManagerDAO {
         return salt.toString();
     }
 	
+	/**
+	 * Returns a list of all email addresses and nicknames
+	 * that begin with the string passed in.
+	 * @param name The string passed in from the search form.
+	 * @return The list of email addresses and nicknames.
+	 */
+	public ArrayList<String> getUserList(String name) {
+		ArrayList<String> list = new ArrayList<String>();
+		
+		try {
+			String sql = "SELECT * FROM users WHERE user_id LIKE ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, name + "%");
+
+            ResultSet rs = s.executeQuery();
+            
+            while (rs.next()) {
+            	String user = rs.getString("user_id");
+            	list.add(user);
+            }
+            
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		
+		try {
+			String sql = "SELECT * FROM users WHERE nickname LIKE ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, name + "%");
+
+            ResultSet rs = s.executeQuery();
+            
+            while (rs.next()) {
+            	String user = rs.getString("nickname");
+            	list.add(user);
+            }
+            
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		
+		return list;
+	}
+
+	
 }

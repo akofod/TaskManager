@@ -81,7 +81,7 @@ $(document).ready(function() {
             error_element.removeClass("error_show").addClass("error");
         }
     });
-	$("#submit").click(function(event){
+	$('#submit').click(function(event){
 	    var error_free=true;
 	    if ($('#email').hasClass("invalid")) {
 	    	error_free=false;
@@ -98,6 +98,9 @@ $(document).ready(function() {
 	    if (!error_free){
 	        event.preventDefault();
 	    }
+	});
+	$('#cancel').on('click', function() {
+		window.location.replace("index.jsp");
 	});
 
 
