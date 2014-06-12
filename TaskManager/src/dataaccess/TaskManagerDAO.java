@@ -289,7 +289,32 @@ public class TaskManagerDAO {
 	}
 	
 	public ArrayList<Task> retrieveTasks(Project project) {
-		return null;
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		try {
+            String sql = "SELECT * FROM tasks WHERE project_id = ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setInt(1, project.getId());
+
+            ResultSet rs = s.executeQuery();
+
+            while (rs.next()) {
+            	Task task = new Task();
+            	task.setId(rs.getInt("task_id"));
+            	task.setDescription(rs.getString("description"));
+            	task.setDueDate(rs.getDate("due_date"));
+                task.setPriority(rs.getString("priority"));
+                task.setProjectId(project.getId());
+                task.setStatus(rs.getString("status"));
+                task.setTimeCompcompleted(rs.getDouble("time_completed"));
+                task.setTimeEstimate(rs.getDouble("time_estimate"));
+                tasks.add(task);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return tasks;
 	}
 	
 	public ArrayList<Task> retrieveTasks(User user, Category cat) {
@@ -384,7 +409,31 @@ public class TaskManagerDAO {
 	}
 	
 	public ArrayList<Project> retrieveProjects(User user) {
-		return null;
+		ArrayList<Project> projects = new ArrayList<Project>();
+		try {
+            String sql = "SELECT * FROM projects WHERE project_id in (";
+            sql += "SELECT project_id from tasks where task_id in (";
+            sql += "SELECT task_id from usertask where user_id = ?))";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, user.getId());
+
+            ResultSet rs = s.executeQuery();
+
+            while (rs.next()) {
+            	Project project = new Project();
+            	project.setId(rs.getInt("project_id"));
+            	project.setDescription("Need to add project descriptions to table");
+            	project.setFinalDeadline(rs.getDate("final_deadline"));
+            	project.setCategoryId(rs.getInt("category_id"));
+            	project.setProjectTasks(retrieveTasks(project));
+                projects.add(project);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return projects;
 	}
 	
 	public Team retrieveTeam(int id) {
