@@ -13,10 +13,16 @@ public class Project implements Serializable {
 	private Date final_deadline;
 	private ArrayList<Task> projectTasks;
 	
+	public int getProject_id() {
+		return project_id;
+	}
 	public int getId() {
 		return project_id;
 	}
 	public void setId(int project_id) {
+		this.project_id = project_id;
+	}
+	public void setProject_id(int project_id) {
 		this.project_id = project_id;
 	}
 	public String getDescription() {
@@ -28,7 +34,13 @@ public class Project implements Serializable {
 	public int getCategoryId() {
 		return category_id;
 	}
+	public int getCategory_id() {
+		return category_id;
+	}
 	public void setCategoryId(int category_id) {
+		this.category_id = category_id;
+	}
+	public void setCategory_id(int category_id) {
 		this.category_id = category_id;
 	}
 	public Date getFinalDeadline() {
@@ -37,12 +49,16 @@ public class Project implements Serializable {
 	public void setFinalDeadline(Date final_deadline) {
 		this.final_deadline = final_deadline;
 	}
+	public Date getFinal_deadline() {
+		return final_deadline;
+	}
+	public void setFinal_deadline(Date final_deadline) {
+		this.final_deadline = final_deadline;
+	}
 	public ArrayList<Task> getProjectTasks() {
 		return projectTasks;
 	}
 	public void setProjectTasks(ArrayList<Task> projectTasks) {
 		this.projectTasks = projectTasks;
 	}
-	
-	
 }
