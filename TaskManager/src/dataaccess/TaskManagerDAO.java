@@ -401,7 +401,27 @@ public class TaskManagerDAO {
 	}
 	
 	public Project retrieveProject(int id) {
-		return null;
+		Project project = new Project();
+		try {
+            String sql = "SELECT * FROM projects WHERE project_id = ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setInt(1, id);
+
+            ResultSet rs = s.executeQuery();
+
+            if (rs.next()) {
+            	project.setId(rs.getInt("project_id"));
+            	project.setDescription("Need to add project descriptions to table");
+            	project.setFinalDeadline(rs.getDate("final_deadline"));
+            	project.setCategoryId(rs.getInt("category_id"));
+            	project.setProjectTasks(retrieveTasks(project));
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return project;
 	}
 	
 	public ArrayList<Project> retrieveProjects(Team team) {
