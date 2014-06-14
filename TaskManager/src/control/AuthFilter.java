@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dataaccess.TaskManagerDAO;
+import model.Project;
 import model.User;
 
 /**
@@ -50,12 +52,10 @@ public class AuthFilter implements Filter {
 				session.setAttribute("user", user);
 			}
 		}
-		else
-		{
-			//System.out.println("User attribute set");
-		}
-
 		if (httpRequest.getRequestURI().equals(redirectURL) || session.getAttribute("user") != null) {
+			if (session.getAttribute("user") != null) {
+				setReqAtts(request, httpRequest, httpRequest.getRequestURI());
+			}
 		    chain.doFilter(request, response);
 		} 
 		else {
@@ -81,14 +81,10 @@ public class AuthFilter implements Filter {
 				cookie = cookies[i];
 				if (cookie.getName().equals("user_id_TaskManager_Su14")) {
 					userName = cookie.getValue();
-					//System.out.println(cookie.getValue());
-					//System.out.println(cookie.getMaxAge());
 					user = dao.retrieveUser(userName);
 				}
 				if (cookie.getName().equals("user_pass_TaskManager_Su14")) {
 					hashPass = cookie.getValue();
-					//System.out.println(cookie.getValue());
-					//System.out.println(cookie.getMaxAge());
 				}
 			}
 		}
@@ -98,5 +94,18 @@ public class AuthFilter implements Filter {
 		}
 		return new User();
 	}
-
+	
+	public void setReqAtts (ServletRequest request, HttpServletRequest httpRequest, String uri) {
+		TaskManagerDAO dao = new TaskManagerDAO();
+		User user = (User) httpRequest.getSession(true).getAttribute("user");
+		if (uri.contains("userHome.jsp")) {
+			ArrayList<Project> projects = dao.retrieveProjects(user);
+			request.setAttribute("userProjects", projects);
+		}
+		else if (uri.contains("project.jsp")) {
+			int projNo = (Integer.parseInt(httpRequest.getParameter("projectID")));
+			Project proj = dao.retrieveProject(projNo);
+			request.setAttribute("project",  proj);
+		}
+	}
 }
