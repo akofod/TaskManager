@@ -433,10 +433,13 @@ public class TaskManagerDAO {
 		try {
             String sql = "SELECT * FROM projects WHERE project_id in (";
             sql += "SELECT project_id from tasks where task_id in (";
-            sql += "SELECT task_id from usertask where user_id = ?))";
+            sql += "SELECT task_id from usertask where user_id = ?) ";
+            sql += "UNION SELECT project_id from teamproject where team_id in (";
+            sql += "SELECT team_id from userteam where user_id = ?))";
 
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, user.getId());
+            s.setString(2, user.getId());
 
             ResultSet rs = s.executeQuery();
 
