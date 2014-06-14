@@ -105,3 +105,20 @@ footer {
  	padding-left:8px;
  	padding-right:8px;
  }
+ 
+#navigation { 
+	width:200px; 
+	height:100%; 
+	float:right; 
+	border: 1px solid black; 
+	background:white;
+}
+
+.link { 
+	margin: 0;
+    border: 0;
+    background: none;
+    overflow: visible;
+    color: blue;
+    cursor: pointer; 
+}

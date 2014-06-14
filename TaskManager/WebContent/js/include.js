@@ -1,0 +1,17 @@
+document.write('<div id=\'navigation\'>');
+document.write('<center><u><b>Navigation</b></u></center>');
+document.write('<table id="topNav">');
+document.write('<tr>');
+document.write('<a href = "/TaskManager/login.jsp"> Login/Logout</a>');
+document.write('</tr>');
+document.write('<tr>');
+document.write('<td><a href = "/TaskManager/registration.jsp"> Register</a></td>');
+document.write('</tr>');
+document.write('<tr>');
+document.write('<td><a href = "/TaskManager/admin/userHome.jsp"> Home</a></td>');
+document.write('</tr>');
+document.write('<tr>');
+document.write('<td><a href = "">Other Links....</a></td>');
+document.write('</tr>');
+document.write('</table>');
+document.write('</div>');

@@ -5,6 +5,7 @@
 <head>
 <title>Login</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="/TaskManager/css/mainTemplate.css">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 
@@ -25,7 +26,12 @@ function getHTML(strAction)
 		type:'POST',
 		data:{"user":user,"password":pwd,"reqAction":strAction,"rememberMe":remem},
 		success: function(ajaxData) {
-			html = ajaxData;
+			if (ajaxData == "success"){
+				window.location.href = 'admin/userHome.jsp';
+			}	
+			else {
+				html = ajaxData;
+			}
 		},
 		error: function(request, status, error) {
 			alert('Error');
@@ -36,10 +42,11 @@ function getHTML(strAction)
 
 </script>
 </head>
-
+<body>
+<script type="text/javascript" src="/TaskManager/js/include.js"> </script>
 <table>
-	<tr><td>User ID:</td><td><input type="text" style="width: 200px" id="username" value=${userIdCookie}></td>
-	<tr><td>Password:</td><td><input type="password" style="width: 200px" id="password" value=${userPassCookie}></td>
+	<tr><td>User ID:</td><td><input type="text" style="width: 200px" id="username"></td>
+	<tr><td>Password:</td><td><input type="password" style="width: 200px" id="password"></td>
 	<td><input type="checkbox" style="width: 20px" id="remember">Remember Me</td></tr>
 	<tr><td><input type="button" style="width: 200px" id="login" value="Login"></td>
 	<td><input type="button" style="width: 200px" id="logout" value="Logout"></td></tr>
