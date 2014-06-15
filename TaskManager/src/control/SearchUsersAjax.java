@@ -29,7 +29,7 @@ public class SearchUsersAjax extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("Entered doPost() in SearchUsersAjax");
 		RequestDispatcher rd;
 		ArrayList<String> userList = new ArrayList<String>();
 		String searchName = request.getParameter("user");

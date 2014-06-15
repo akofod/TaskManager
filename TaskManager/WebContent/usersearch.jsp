@@ -5,28 +5,44 @@
 <head>
 <title>User Search</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" href="/TaskManager/css/autocomplete.css">
+<link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="/TaskManager/js/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
+<script src="/TaskManager/js/jquery.ui.autocomplete.html.js" type="text/javascript"></script>
 <script type="text/javascript">
+$(document).ready(function() {
+    $(function() {
+        $("#user").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "autocomplete.ajax",
+                    type: "POST",
+                    data: { "term" : $("#user").val() },
+                    contentType: "application/json",
+                    dataType: "json",
 
-function getHTML(strAction) 
-{
-    
-}
-
+                    success: function(data) {
+                        response(data);
+                    }
+               });              
+            }   
+        });
+    });
+});
 </script>
 </head>
 <body>
-    <h2>Search for Users</h2>
-    <form id="searchForm" method="POST" action="searchusers.do">
-        <div>
-            <label for="user">Enter an email or nickname to search:</label>
-            <input id="user" type="text" style="width: 150px" name="user" />
-            <span class="error"></span>
-        </div>
-        <div>
-            <input type="submit" style="width: 100px" id="submit" value="Search">
-        </div>
-    </form>
-
+    <div id="formWrap">
+        <form id="searchForm" method="POST" action="searchusers.do">
+            <div id="users" class="ui-widget">
+                <label id="userLabel">Enter nickname or email:</label>
+                <input id="user" type="text" name="user" />
+            </div>
+            <div>
+                <input type="submit" style="width: 100px" id="submit" value="Find User">
+            </div>
+        </form>
+    </div>
 </body>
 </html>
