@@ -33,6 +33,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
+    <h2>Search for a User</h2>
     <div id="formWrap">
         <form id="searchForm" method="POST" action="searchusers.do">
             <div id="users" class="ui-widget">

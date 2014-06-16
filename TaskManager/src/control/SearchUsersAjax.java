@@ -31,15 +31,17 @@ public class SearchUsersAjax extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Entered doPost() in SearchUsersAjax");
 		RequestDispatcher rd;
-		ArrayList<String> userList = new ArrayList<String>();
-		String searchName = request.getParameter("user");
+		String name = request.getParameter("user");
 		TaskManagerDAO dao = new TaskManagerDAO();
-		User user = new User();
-		
-		userList = dao.getUserList(searchName);
-		for (String name : userList) {
-			System.out.println(name);
+		User user;
+		if (name.indexOf('@') == -1){
+			user = dao.retrieveUserByNickname(name);
 		}
+		else {
+			user = dao.retrieveUser(name);
+		}
+		
+		System.out.println("Found user: " + user.getNickname() + " : " + user.getId());
 	}
 
 }
