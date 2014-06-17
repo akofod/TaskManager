@@ -133,18 +133,19 @@ public class TaskManagerDAO {
 	 * @return True if the project was created successfully,
 	 * false otherwise.
 	 */
-	public int createProject(int catId, Date deadline) {
+	public int createProject(Project project) {
 		//TODO: Should a team also be assigned when a project is created?
-		java.sql.Date sqlDate = new java.sql.Date(deadline.getTime());
+		java.sql.Date sqlDate = new java.sql.Date(project.getFinalDeadline().getTime());
 		try
         {
-            String sql = "INSERT INTO Projects(category_id, final_deadline) " + 
-            		"VALUES (?,?) ";
+            String sql = "INSERT INTO Projects(category_id, final_deadline, description) " + 
+            		"VALUES (?,?,?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setInt(1, catId);
+            ps.setInt(1, project.getCategoryId());
             ps.setDate(2, sqlDate);
+            ps.setString(3, project.getDescription());
             
             ps.executeUpdate();
             return SUCCESS;
@@ -468,11 +469,54 @@ public class TaskManagerDAO {
 	}
 	
 	public Category retrieveCategory(String desc) {
-		return null;
+		Category cat = new Category();
+		try {
+			String sql = "SELECT * FROM categories WHERE description = ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, desc);
+
+            ResultSet rs = s.executeQuery();
+
+            while (rs.next()) {
+            	cat.setId(rs.getInt("category_id"));
+            	cat.setDescription(rs.getString("description"));
+            }
+            
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+
+		return cat;
 	}
 	
 	public ArrayList<Category> retrieveCategories() {
 		return null;
+	}
+	
+	public ArrayList<Category> retrieveCategories(String term) {
+		ArrayList<Category> list = new ArrayList<Category>();
+		try {
+			String sql = "SELECT * FROM categories WHERE description LIKE ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1,"%" + term + "%");
+
+            ResultSet rs = s.executeQuery();
+
+            while (rs.next()) {
+            	Category cat = new Category();
+            	cat.setId(rs.getInt("category_id"));
+            	cat.setDescription(rs.getString("description"));
+            	list.add(cat);
+            }
+            
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		return list;
 	}
 	
 	public int updateUser(int user_id, String username, String firstName, String lastName,

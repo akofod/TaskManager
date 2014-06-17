@@ -30,3 +30,8 @@
 * html .ui-autocomplete {
     height: 250px;
 }
+
+#error_text {
+    color: red;
+    padding-left: 20px; 
+}

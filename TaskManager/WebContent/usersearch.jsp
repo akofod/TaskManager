@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/TaskManager/css/autocomplete.css">
 <link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script src="/TaskManager/js/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
 <script src="/TaskManager/js/jquery.ui.autocomplete.html.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -16,12 +16,11 @@ $(document).ready(function() {
         $("#user").autocomplete({
             source: function(request, response) {
                 $.ajax({
-                    url: "autocomplete.ajax",
+                    url: "searchusers.do",
                     type: "GET",
                     data: { "term" : request.term },
                     contentType: "application/json",
                     dataType: "json",
-
                     success: function(data) {
                         response(data);
                     }
@@ -37,7 +36,7 @@ $(document).ready(function() {
     <div id="formWrap">
         <form id="searchForm" method="POST" action="searchusers.do">
             <div id="users" class="ui-widget">
-                <label id="userLabel">Enter nickname or email:</label>
+                <label id="userLabel" for="user">Enter nickname or email:</label>
                 <input id="user" type="text" name="user" />
             </div>
             <div>
