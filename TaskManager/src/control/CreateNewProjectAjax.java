@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONObject;
-
 import model.Category;
 import model.Project;
-import model.User;
+
+import org.json.simple.JSONObject;
+
 import dataaccess.TaskManagerDAO;
 
 /**
@@ -29,7 +29,9 @@ public class CreateNewProjectAjax extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     public CreateNewProjectAjax() {
+    	
         super();
+        
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
