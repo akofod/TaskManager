@@ -22,6 +22,7 @@
 	</table>	
 	<table name="Projects" primary_key="project_id" foreign_key_1="category_id" foreign_key_1_table="Categories" foreign_key_1_field="category_id">
 		<column type="integer" name="project_id" />
+		<column type="varChar" length="80" name="description" />
 		<column type="integer" name="category_id" />
 		<column type="date" name="final_deadline" />
 	</table>
