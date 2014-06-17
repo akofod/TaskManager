@@ -17,8 +17,8 @@ $(document).ready(function() {
             source: function(request, response) {
                 $.ajax({
                     url: "autocomplete.ajax",
-                    type: "POST",
-                    data: { "term" : $("#user").val() },
+                    type: "GET",
+                    data: { "term" : request.term },
                     contentType: "application/json",
                     dataType: "json",
 

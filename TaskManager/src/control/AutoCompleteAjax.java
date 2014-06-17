@@ -27,11 +27,7 @@ public class AutoCompleteAjax extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Recieved POST request in AutoCompleteAjax");
+		System.out.println("Recieved GET request in AutoCompleteAjax");
 		PrintWriter out = response.getWriter();
         response.setContentType("text/html");
         response.setHeader("Cache-control", "no-cache, no-store");
@@ -53,5 +49,9 @@ public class AutoCompleteAjax extends HttpServlet {
         out.println(arrayObj.toString());
         out.close();
 	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}	
 
 }
