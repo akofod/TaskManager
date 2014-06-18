@@ -5,7 +5,7 @@
 	<username>frank73_s14org</username>
 	<password>org2014</password>
 	<table name="Categories" primary_key="category_id">
-	    <column type="integer" name="category_id"/>
+	    <column type="integer" name="category_id" autoIncrement="true" />
 	    <column type="varChar" length="50" name="description" ></column>
 	</table>
 	<table name="Users" primary_key="user_id">
@@ -17,11 +17,11 @@
 		<column type="varChar" length="50" name="salt"></column>
 	</table>
 	<table name="Teams" primary_key="team_id">
-		<column type="integer" name="team_id" />
+		<column type="integer" name="team_id" autoIncrement="true" />
 		<column type="varChar" length="50" name="description" />
 	</table>	
 	<table name="Projects" primary_key="project_id" foreign_key_1="category_id" foreign_key_1_table="Categories" foreign_key_1_field="category_id">
-		<column type="integer" name="project_id" />
+		<column type="integer" name="project_id" autoIncrement="true" />
 		<column type="varChar" length="80" name="description" />
 		<column type="integer" name="category_id" />
 		<column type="date" name="final_deadline" />
@@ -40,7 +40,7 @@
 	</table>
 	<table name="Tasks" primary_key="task_id" foreign_key_1="project_id"
 		foreign_key_1_table="Projects" foreign_key_1_field="project_id">
-		<column name="task_id" type="integer"></column>
+		<column name="task_id" type="integer" autoIncrement="true"></column>
 		<column name="description" type="varChar" length="80"></column>
 		<column name="due_date" type="date"></column>
 		<column name="priority" type="varChar" length="25"></column>		

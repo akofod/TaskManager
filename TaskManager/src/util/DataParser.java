@@ -138,7 +138,7 @@ public class DataParser {
 			else {
 				sb+=eElement.getAttribute("type");
 				if (eElement.hasAttribute("autoIncrement")) {
-					sb+=" AUTO_INCREMENT, PRIMARY KEY (" + eElement.getAttribute("name") + ")";
+					sb+=" AUTO_INCREMENT";
 				}
 			}
 			return sb;
