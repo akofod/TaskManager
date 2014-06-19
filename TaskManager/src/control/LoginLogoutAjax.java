@@ -52,7 +52,7 @@ public class LoginLogoutAjax extends HttpServlet {
 					response.addCookie(userPass);
 				}
 				 
-				message = "You have successfully logged in, " + user;
+				message = "success";
 			}
 			else
 			{

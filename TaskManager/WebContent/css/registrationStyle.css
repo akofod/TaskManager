@@ -1,12 +1,23 @@
 @CHARSET "ISO-8859-1";
 
+#heading {
+	font-family: sans-serif;
+	text-align: center;
+}
+
 #registrationForm label {
 	display: inline-block;
 	width: 100px;
 	text-align: right;
 }
 
-#registrationForm div {
+#regSuccess {
+	color: blue;
+	text-align: center;
+	font-family: sans-serif;
+}
+
+.form div {
 	margin-top: 1em;
 }
 
@@ -16,8 +27,14 @@
 }
 
 #buttons {
-	padding-top: 10px;
-	padding-left: 30px;
+	padding-top: 30px;
+	padding-left: 50px;
+	margin: 0 auto;
+	width: 80%;
+}
+
+#buttons input {
+    margin-left: 20px;
 }
 
 .error{

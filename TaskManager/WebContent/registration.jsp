@@ -4,7 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="./css/registrationStyle.css">
+<link rel="stylesheet" type="text/css" href="/TaskManager/css/registrationStyle.css">
+<link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 <title>New User Registration</title>
 <script type="text/javascript">
@@ -100,7 +101,7 @@ $(document).ready(function() {
 	    }
 	});
 	$('#cancel').on('click', function() {
-		window.location.replace("index.jsp");
+		self.parent.tb_remove();
 	});
 
 
@@ -109,34 +110,34 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-    <h2>New User Registration</h2>
-    <form id="registrationForm" method="POST" action="register.do">
-        <div>
+    <h2 id="heading">New User Registration</h2>
+    <form id="registrationForm" class="form" method="POST" action="register.do">
+        <div class="ui-widget">
             <label for="email">Email:</label>
             <input id="email" type="email" style="width: 150px" name="email" />
             <span class="error">A valid email address is required</span>
         </div>
-        <div>
+        <div class="ui-widget">
             <label for="nickname">Nickname:</label>
             <input id="nickname" type="text" style="width: 150px" name="nickname" />
             <span class="error">Nickname must be 6-15 characters, numbers and letters only</span>
         </div>
-        <div>
+        <div class="ui-widget">
             <label for="firstname">First Name:</label>
             <input id="firstname" type="text" style="width: 150px" name="firstname" />
             <span class="error"></span>
         </div>
-        <div>
+        <div class="ui-widget">
             <label for="lastname">Last Name:</label>
             <input id="lastname" type="text" style="width: 150px" name="lastname" />
             <span class="error"></span>
         </div>
-        <div>
+        <div class="ui-widget">
             <label for="password">Password:</label>
             <input autocomplete="off" id="password" type="password" style="width: 150px" name="password" />
             <span class="error">Password must be at least 8 characters, with at least one capital letter, one lowercase letter, and one number</span>
         </div>
-        <div>
+        <div class="ui-widget">
             <label for="confirm">Confirm Password:</label>
             <input autocomplete="off" id="confirm" type="password" style="width: 150px" name="confirm" />
             <span class="error">Does not match password</span>

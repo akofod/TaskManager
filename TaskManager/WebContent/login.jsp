@@ -5,7 +5,8 @@
 <head>
 <title>Login</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="/TaskManager/css/mainTemplate.css">
+<link rel="stylesheet" type="text/css" href="/TaskManager/css/registrationStyle.css">
+<link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 
@@ -27,7 +28,7 @@ function getHTML(strAction)
 		data:{"user":user,"password":pwd,"reqAction":strAction,"rememberMe":remem},
 		success: function(ajaxData) {
 			if (ajaxData == "success"){
-				window.location.href = 'admin/userHome.jsp';
+				window.top.location.href = 'admin/userHome.jsp';
 			}	
 			else {
 				html = ajaxData;
@@ -43,14 +44,26 @@ function getHTML(strAction)
 </script>
 </head>
 <body>
-<script type="text/javascript" src="/TaskManager/js/include.js"> </script>
-<table>
-	<tr><td>User ID:</td><td><input type="text" style="width: 200px" id="username"></td>
-	<tr><td>Password:</td><td><input type="password" style="width: 200px" id="password"></td>
-	<td><input type="checkbox" style="width: 20px" id="remember">Remember Me</td></tr>
-	<tr><td><input type="button" style="width: 200px" id="login" value="Login"></td>
-	<td><input type="button" style="width: 200px" id="logout" value="Logout"></td></tr>
-</table>
+    <div id="regSuccess">${regSuccess}</div>
+    <form id="loginForm" class="form">
+        <div class="ui-widget">
+	       <label for="username">User ID:</label>
+	       <input type="text" style="width: 200px" id="username">
+	    </div>
+	    <div class="ui-widget">
+	       <label for="password">Password:</label>
+	       <input type="password" style="width: 200px" id="password">
+	    </div>
+	    <div class="ui-widget">
+	       <input type="checkbox" style="width: 20px" id="remember">
+	       <label for="remember">Remember Me</label>
+	    </div>
+        <div id="buttons">
+	       <input type="button" style="width: 100px" id="login" value="Login">
+	       <input type="button" style="width: 100px" id="logout" value="Logout">
+	       <input type="button" style="width: 100px" id="cancel" value="Cancel"/>
+	   </div>
+    </form>
 
 <div id="outputAuth" style="width:100%;">
 </div>
@@ -64,6 +77,9 @@ function getHTML(strAction)
 	   {   
 	       getHTML('logout');           
 	   });
+   $('#cancel').on('click', function() {
+       self.parent.tb_remove();
+   });
 </script>
 
 </body>

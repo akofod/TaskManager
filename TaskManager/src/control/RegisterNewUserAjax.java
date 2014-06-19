@@ -52,6 +52,7 @@ public class RegisterNewUserAjax extends HttpServlet{
 		}
 		else {
 			dao.createUser(user);
+			request.setAttribute("regSuccess", "You are now registered! Please login below.");
 			rd = request.getRequestDispatcher("login.jsp");
 		}
 		
