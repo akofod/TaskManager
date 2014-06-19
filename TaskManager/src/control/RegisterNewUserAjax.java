@@ -41,6 +41,16 @@ public class RegisterNewUserAjax extends HttpServlet{
 		user.setLastName(lastname);
 		user.setPassword(password);
 		
+		if (!(email.contains("@") || email.contains("."))) {
+			request.setAttribute("error", "That does not appear to be a valid email address.");
+			rd = request.getRequestDispatcher("registration.jsp");
+		}
+		
+		if (email.equals("") || nickname.equals("") || password.equals("")) {
+			request.setAttribute("error", "Please enter all of the information requested.");
+			rd = request.getRequestDispatcher("registration.jsp");
+		}
+		
 		User search = dao.retrieveUser(email);
 		if (email.equals(search.getId())) {
 			request.setAttribute("error", "This email address is already registered. Please log in to your account or enter a different email address.");

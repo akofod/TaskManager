@@ -42,7 +42,7 @@ $(document).ready(function() {
 		var input=$(this);
 		var valid=input.hasClass("valid");
 		var error_element=$('span', $('#email').parent());
-		if (!valid) {
+		if (!valid || input==="") {
 			error_element.removeClass("error").addClass("error_show");
 		}
 		else {
@@ -53,7 +53,7 @@ $(document).ready(function() {
         var input=$(this);
         var valid=input.hasClass("valid");
         var error_element=$('span', $('#nickname').parent());
-        if (!valid) {
+        if (!valid || input==="") {
             error_element.removeClass("error").addClass("error_show");
         }
         else {
@@ -64,7 +64,7 @@ $(document).ready(function() {
         var input=$(this);
         var valid=input.hasClass("valid");
         var error_element=$('span', $('#password').parent());
-        if (!valid) {
+        if (!valid || input==="") {
             error_element.removeClass("error").addClass("error_show");
         }
         else {
@@ -75,7 +75,7 @@ $(document).ready(function() {
         var input=$(this);
         var valid=input.hasClass("valid");
         var error_element=$('span', $('#confirm').parent());
-        if (!valid) {
+        if (!valid || input==="") {
             error_element.removeClass("error").addClass("error_show");
         }
         else {
@@ -84,6 +84,12 @@ $(document).ready(function() {
     });
 	$('#submit').click(function(event){
 	    var error_free=true;
+	    var email=$('#email').val();
+	    var nickname=$('#nickname').val();
+	    var password=$('#password').val();
+	    if (email==="" || nickname==="" || password==="") {
+	    	error_free=false;
+	    }
 	    if ($('#email').hasClass("invalid")) {
 	    	error_free=false;
 	    }
