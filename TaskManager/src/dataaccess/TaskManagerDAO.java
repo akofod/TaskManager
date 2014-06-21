@@ -111,8 +111,8 @@ public class TaskManagerDAO {
             
             ps.setString(1, user.getId());
             ps.setString(2, user.getNickname());
-            ps.setString(3, user.getFirstName());
-            ps.setString(4, user.getLastName());
+            ps.setString(3, user.getFirstname());
+            ps.setString(4, user.getLastname());
             ps.setString(5, hashPass);
             ps.setString(6, salt);
             
@@ -524,6 +524,260 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
+	public String updateUserId(String oldId, String newId) {
+		String result = "Email not updated.";
+		if (newId == null || newId.trim().length() == 0) {
+			return "Please enter a valid new email address";
+		}
+		else if (oldId.equals(newId)) {
+			return "Email is unchanged.  No update necessary.";
+		}
+		else if (!validateEmail(newId)){
+			return "Email address not formatted correctly.  Please try again.";
+		}
+		else if (isUserIdUsed(newId)) {
+			return "Email is already used.  Please try a different email.";
+		}
+		else {
+			try
+			{
+				String sql = "Update users set user_id=? where user_id=?";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1, newId);
+				ps.setString(2, oldId);
+				ArrayList<Integer> tasks = selectUserTask(oldId);
+				ArrayList<Integer> teams = selectUserTeam(oldId);
+				deleteUserTask(oldId);
+				deleteUserTeam(oldId);
+				ps.executeUpdate();
+				insertUserTask(newId, tasks);
+				insertUserTeam(newId, teams);
+				result = "Email updated successfully.";
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+		}
+		return result;
+	}
+	
+	public String updateUserNickname(String userId, String newNickname) {
+		String result = "Nickname not updated.";
+		String nickname = "";
+		
+		if (newNickname != null && newNickname.trim().length() > 0) {
+			nickname = newNickname;
+		}
+		
+		if (nickname.equals(retrieveUser(userId).getNickname())) {
+			return "Nickname is unchanged.  No update necessary.";
+		}
+		else {
+			try
+			{
+				String sql = "Update users set nickname=? where user_id=?";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1, nickname);
+				ps.setString(2, userId);
+				ps.executeUpdate();
+				result = "Nickname updated successfully.";
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+		}
+		return result;
+	}
+	
+	public String updateUserFirstName(String userId, String newFirstName) {
+		String result = "First name not updated.";
+		String firstname = "";
+		
+		if (newFirstName != null && newFirstName.trim().length() > 0) {
+			firstname = newFirstName;
+		}
+		
+		if (firstname.equals(retrieveUser(userId).getFirstname())) {
+			return "First name is unchanged.  No update necessary.";
+		}
+		else {
+			try {
+				String sql = "Update users set firstname=? where user_id=?";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1, newFirstName);
+				ps.setString(2, userId);
+				ps.executeUpdate();
+				result = "First name updated successfully.";
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+		}
+		return result;
+	}
+	
+	public String updateUserLastName(String userId, String newLastName) {
+		String result = "Last name not updated.";
+		String lastname = "";
+		
+		if (newLastName != null && newLastName.trim().length() > 0) {
+			lastname = newLastName;
+		}
+		
+		if (lastname.equals(retrieveUser(userId).getLastname())) {
+			return "Last name is unchanged.  No update necessary.";
+		}
+		else {
+			try {
+				String sql = "Update users set lastname=? where user_id=?";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1, lastname);
+				ps.setString(2, userId);
+				ps.executeUpdate();
+				result = "Last name updated successfully.";
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+		}
+		return result;
+	}
+	
+	public String updatePassword(String userName, String newPass) {
+		String result = "Password not updated.";
+		if (newPass == null || newPass.trim().length() == 0) {
+			return "New password missing.  Please try again.";
+		}
+		String currentPass = retrieveUser(userName).getPassword();
+		String newPassCheck = getSecurePassword(newPass, retrieveUser(userName).getSalt()); 
+		if (currentPass.equals(newPassCheck)) {
+			return "Password is unchanged.  No update necessary.";
+		}
+		else {
+			if(validatePassword(newPass))
+			{	
+				try
+				{
+					String sql = "Update users set password=?, salt=? where user_id=?";
+					PreparedStatement ps = con.prepareStatement(sql);
+					String salt = getSalt();
+					String newPassSecure = getSecurePassword(newPass, salt);
+					ps.setString(1, newPassSecure);
+					ps.setString(2, salt);
+					ps.setString(3, userName);
+					ps.executeUpdate();
+					result = "Password updated successfully";
+				}
+				catch (Exception e){
+					System.out.println(e);
+				}
+			}
+			else {
+				result = "Password is invalid.  Password must be at least 8 characters in length, contain at least one upper case character, ";
+				result += "contain at least one lower case character, contain at least one numeric character, and contain no spaces.";
+			}
+		}
+		return result;
+	}
+	
+	public ArrayList<Integer> selectUserTask(String userId) {
+		ArrayList<Integer> tasks = new ArrayList<Integer>();
+		try
+		{
+			String sqlTask = "Select task_id from usertask where user_id=?";
+			PreparedStatement ps0 = con.prepareStatement(sqlTask);	
+			ps0.setString(1, userId);
+			ResultSet rs = ps0.executeQuery();
+			
+			while (rs.next()) {
+				tasks.add(new Integer(rs.getInt("task_id")));
+			}
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		return tasks;
+	}
+	
+	public void deleteUserTask(String userId) {
+		try
+		{
+			String sqlDelete = "Delete from usertask where user_id=?";
+			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
+			ps1.setString(1, userId);
+			ps1.executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	public void insertUserTask(String userId, ArrayList<Integer> taskList) {
+		try
+		{	
+			for (Integer i : taskList) {
+				String sqlInsert = "Insert into usertask values (?,?)";
+				PreparedStatement ps = con.prepareStatement(sqlInsert);
+				ps.setString(1, userId);
+				ps.setInt(2, i);
+				ps.executeUpdate();
+			}
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
+		
+	public ArrayList<Integer> selectUserTeam(String userId) {
+		ArrayList<Integer> teams = new ArrayList<Integer>();
+		try
+		{
+			String sqlTeam = "Select team_id from userteam where user_id=?";
+			PreparedStatement ps0 = con.prepareStatement(sqlTeam);	
+			ps0.setString(1, userId);
+			ResultSet rs = ps0.executeQuery();
+			
+			while (rs.next()) {
+				teams.add(new Integer(rs.getInt("team_id")));
+			}
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		return teams;
+	}
+	
+	public void deleteUserTeam(String userId) {
+		try
+		{
+			String sqlDelete = "Delete from userteam where user_id=?";
+			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
+			ps1.setString(1, userId);
+			ps1.executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	public void insertUserTeam(String userId, ArrayList<Integer> teamList) {
+		try
+		{	
+			for (Integer i : teamList) {
+				String sqlInsert = "Insert into userteam values (?,?)";
+				PreparedStatement ps = con.prepareStatement(sqlInsert);
+				ps.setString(1, userId);
+				ps.setInt(2, i);
+				ps.executeUpdate();
+			}
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
+	
+
+	
 	public int updateTeam(int team_id, String description) {
 		return NO_RECORD;
 	}
@@ -538,29 +792,6 @@ public class TaskManagerDAO {
 	
 	public int updateTask(int task_id, String description, Date dueDate, int priority,
 			Date timeEst, int projectId, int userId) {
-		return NO_RECORD;
-	}
-	
-	public int updatePassword(String userName, String oldPass, String newPass) {
-		if(authenticateUser(userName, oldPass)==1 && validatePassword(newPass) == 1)
-		{	
-			try
-			{
-				String sql = "Update users set password=?, salt=? where user_id=?";
-				PreparedStatement ps = con.prepareStatement(sql);
-				String salt = getSalt();
-				String newPassSecure = getSecurePassword(newPass, salt);
-				ps.setString(1, newPassSecure);
-				ps.setString(2, salt);
-				ps.setString(3, userName);
-				ps.executeUpdate();
-				return SUCCESS;
-			}
-			catch (Exception e){
-				System.out.println(e);
-	            return NO_RECORD;
-			}
-		}
 		return NO_RECORD;
 	}
 	
@@ -596,10 +827,16 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
-	public int validatePassword(String strPass) {
+	public boolean validateEmail(String email) {
+		String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+	    return email.matches(EMAIL_REGEX);
+	}
+	
+	public boolean validatePassword(String strPass) {
 		int passLength = strPass.trim().length();
 		boolean hasUpper = false;
 		boolean hasLower = false;
+		boolean hasNumeric = false;
 		int hasSpace = strPass.indexOf(" ");
 		if (passLength > 7 && hasSpace == -1)
 		{
@@ -613,12 +850,17 @@ public class TaskManagerDAO {
 		            hasLower = true;
 		        }
 		    }
-			if (hasUpper && hasLower)
+			for(int i=0; i<passLength; i++) {
+		        if(Character.isDigit(strPass.charAt(i))) {
+		            hasNumeric = true;
+		        }
+		    }
+			if (hasUpper && hasLower && hasNumeric)
 			{
-				return SUCCESS;
+				return true;
 			}
 		}
-		return NO_RECORD;
+		return false;
 	}
 	
 	public boolean isNicknameUsed(String nickname) {
@@ -628,6 +870,26 @@ public class TaskManagerDAO {
 
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, nickname);
+
+            ResultSet rs = s.executeQuery();
+
+            if (rs.next()) {
+            	 used = true;
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return used;
+	}
+	
+	public boolean isUserIdUsed(String userId) {
+		boolean used = false;
+		try {
+            String sql = "SELECT * FROM users WHERE user_id = ?";
+
+            PreparedStatement s = con.prepareStatement(sql);
+            s.setString(1, userId);
 
             ResultSet rs = s.executeQuery();
 

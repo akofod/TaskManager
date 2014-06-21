@@ -42,7 +42,13 @@ public class Project implements Serializable {
 	public Date getFinalDeadline() {
 		return final_deadline;
 	}
+	public Date getFinal_deadline() {
+		return final_deadline;
+	}
 	public void setFinalDeadline(Date final_deadline) {
+		this.final_deadline = final_deadline;
+	}
+	public void setFinal_deadline(Date final_deadline) {
 		this.final_deadline = final_deadline;
 	}
 	public ArrayList<Task> getProjectTasks() {

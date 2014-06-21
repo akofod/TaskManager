@@ -33,13 +33,13 @@ public class User implements Serializable {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public String getFirstName() {
+	public String getFirstname() {
 		return firstname;
 	}
 	public void setFirstName(String firstname) {
 		this.firstname = firstname;
 	}
-	public String getLastName() {
+	public String getLastname() {
 		return lastname;
 	}
 	public void setLastName(String lastname) {
