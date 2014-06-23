@@ -102,7 +102,7 @@ public class AuthFilter implements Filter {
 			ArrayList<Project> projects = dao.retrieveProjects(user);
 			request.setAttribute("userProjects", projects);
 		}
-		else if (uri.contains("project.jsp")) {
+		else if (uri.contains("/project.jsp")) {
 			int projNo = (Integer.parseInt(httpRequest.getParameter("projectID")));
 			Project proj = dao.retrieveProject(projNo);
 			request.setAttribute("project",  proj);

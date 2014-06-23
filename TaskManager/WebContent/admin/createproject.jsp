@@ -31,9 +31,27 @@ $(document).ready(function() {
     $(function() {
     	$( "#deadline" ).datepicker();
     });
-    $('#cancel').on('click', function() {
-        window.location.replace("index.jsp");
-    });
+    $('#submit').click(function(event){
+	    var error_free=true;
+	    var projectName=$('#projectName').val();
+	    var category=$('#category').val();
+	    var deadline=$('#deadline').val();
+	    if (projectName==="" || category==="" || deadline==="") {
+	    	error_free=false;
+	    }
+	    if ($('#projectName').hasClass("invalid")) {
+	    	error_free=false;
+	    }
+	    if ($('#category').hasClass("invalid")) {
+            error_free=false;
+        }
+	    if ($('#deadline').hasClass("invalid")) {
+            error_free=false;
+        }
+	    if (!error_free){
+	        event.preventDefault();
+	    }
+	});
 });
 </script>
 </head>
@@ -61,5 +79,10 @@ $(document).ready(function() {
             <div id="error_text">${error}</div>
         </form>
     </div>
+    <script type="text/javascript">
+		$('#cancel').on('click', function() {
+		    self.parent.tb_remove();
+		});
+	</script>
 </body>
 </html>

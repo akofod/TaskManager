@@ -24,7 +24,7 @@ import dataaccess.TaskManagerDAO;
 /**
  * Servlet implementation class SearchUsersAjax
  */
-@WebServlet("/createProject.do")
+@WebServlet("/admin/createProject.do")
 public class CreateNewProjectAjax extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -90,7 +90,7 @@ public class CreateNewProjectAjax extends HttpServlet {
 		project.setFinalDeadline(due_date);
 		
 		if (dao.createProject(project) == 1) {
-			rd = request.getRequestDispatcher("index.jsp");
+			rd = request.getRequestDispatcher("userHome.jsp");
 		}
 		else {
 			request.setAttribute("error", "There was a problem creating your project. Please try again.");

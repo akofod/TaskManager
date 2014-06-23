@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<schema name="frank73_s14org">
-    <jdbcURL>jdbc:mysql://s14org.franklinpracticum.com</jdbcURL>
-	<username>frank73_s14org</username>
-	<password>org2014</password>
+<schema name="taskmanager">
+    <jdbcURL>jdbc:mysql://localhost:3306/taskmanager</jdbcURL>
+	<username>root</username>
+	<password>root</password>
 	<table name="Categories" primary_key="category_id">
 	    <column type="integer" name="category_id" autoIncrement="true" />
 	    <column type="varChar" length="50" name="description" ></column>
