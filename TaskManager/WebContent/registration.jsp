@@ -107,7 +107,7 @@ $(document).ready(function() {
 	    }
 	});
 	$('#cancel').on('click', function() {
-		self.parent.tb_remove();
+		
 	});
 
 
@@ -151,7 +151,7 @@ $(document).ready(function() {
         <div id="buttons">
             <input type="submit" style="width: 100px" id="submit" value="Submit">
             <input type="reset" style="width: 100px" id="reset" value="Reset"/>
-            <input type="button" style="width: 100px" id="cancel" value="Cancel"/>
+            
         </div>
         <div id="error_text">${error}</div>
     </form>

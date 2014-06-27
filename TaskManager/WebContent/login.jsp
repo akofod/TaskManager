@@ -61,7 +61,7 @@ function getHTML(strAction)
         <div id="buttons">
 	       <input type="button" style="width: 100px" id="login" value="Login">
 	       <input type="button" style="width: 100px" id="logout" value="Logout">
-	       <input type="button" style="width: 100px" id="cancel" value="Cancel"/>
+	       
 	   </div>
     </form>
 
@@ -78,7 +78,7 @@ function getHTML(strAction)
 	       getHTML('logout');           
 	   });
    $('#cancel').on('click', function() {
-       self.parent.tb_remove();
+	   
    });
 </script>
 
