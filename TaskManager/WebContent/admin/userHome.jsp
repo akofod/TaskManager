@@ -6,17 +6,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="/TaskManager/css/mainTemplate.css">
-<link rel="stylesheet" href="../css/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/colorbox.css" type="text/css" media="screen" />
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="../js/thickbox.js"></script>
+<script type="text/javascript" src="../js/jquery.colorbox.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".newProject").colorbox({iframe: true, innerWidth:540, innerHeight:270});
+    $(".accountAdmin").colorbox({iframe: true, innerWidth:640, innerHeight:460});
+});
+</script>
 <title>Home</title>
 </head>
 <body>
 <script type="text/javascript" src="/TaskManager/js/include.js"> </script>
 <b>Projects currently assigned to ${user.user_id}</b> <br> <br>
 <div>
-	<a href="createproject.jsp?KeepThis=true&TB_iframe=true&height=300&width=350&modal=true" class="thickbox">New Project</a> | 
-	<a href="accountAdmin.jsp?KeepThis=true&TB_iframe=true&height=300&width=350&modal=true" class="thickbox">Update User Details</a>
+	<a href="createproject.jsp" class="newProject">New Project</a> | 
+	<a href="accountAdmin.jsp" class="accountAdmin">Update User Details</a>
 </div>
 <table border="1">
 	<tr>

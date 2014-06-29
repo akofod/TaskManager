@@ -11,6 +11,7 @@
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
 <script src="/TaskManager/js/jquery.ui.autocomplete.html.js" type="text/javascript"></script>
 <script type="text/javascript">
+
 $(document).ready(function() {
     $(function() {
     	$("#category").autocomplete({
@@ -51,8 +52,36 @@ $(document).ready(function() {
 	    if (!error_free){
 	        event.preventDefault();
 	    }
+	    getHTML("createProject");
 	});
 });
+
+function getHTML(strAction) 
+{
+	var projectName=$('#projectName').val();
+	var category=$('#category').val();
+	var deadline=$('#deadline').val();
+	var html = '';
+	
+	$.ajax({
+		async: false,
+		cache: false,
+		url: 'createProject.do',
+		type:'POST',
+		data:{"projectName":projectName,"category":category,"deadline":deadline},
+		success: function(ajaxData) {
+			if (ajaxData == "success"){
+				window.top.location.href = 'userHome.jsp';
+			}	
+			else {
+				html = ajaxData;
+			}
+		},
+		error: function(request, status, error) {
+			alert(html);
+		}
+	});
+}
 </script>
 </head>
 <body>
@@ -74,15 +103,9 @@ $(document).ready(function() {
             <div id="buttons">
                 <input type="submit" style="width: 100px" id="submit" value="Submit">
                 <input type="reset" style="width: 100px" id="reset" value="Reset"/>
-                <input type="button" style="width: 100px" id="cancel" value="Cancel"/>
             </div>
             <div id="error_text">${error}</div>
         </form>
     </div>
-    <script type="text/javascript">
-		$('#cancel').on('click', function() {
-		    self.parent.tb_remove();
-		});
-	</script>
 </body>
 </html>

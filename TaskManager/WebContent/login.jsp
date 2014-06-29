@@ -28,7 +28,7 @@ function getHTML(strAction)
 		data:{"user":user,"password":pwd,"reqAction":strAction,"rememberMe":remem},
 		success: function(ajaxData) {
 			if (ajaxData == "success"){
-				window.top.location.href = 'admin/userHome.jsp';
+				window.location.href = 'admin/userHome.jsp';
 			}	
 			else {
 				html = ajaxData;

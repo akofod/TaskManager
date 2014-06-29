@@ -1,5 +1,6 @@
 package control;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -65,6 +66,7 @@ public class CreateNewProjectAjax extends HttpServlet {
 		TaskManagerDAO dao = new TaskManagerDAO();
 		int cat_id;
 		System.out.println("Project: " + name + ", " + category + ", " + deadline);
+		String message = "";
 		
 		Category checkCat = dao.retrieveCategory(category);
 		
@@ -90,14 +92,16 @@ public class CreateNewProjectAjax extends HttpServlet {
 		project.setFinalDeadline(due_date);
 		
 		if (dao.createProject(project) == 1) {
-			rd = request.getRequestDispatcher("userHome.jsp");
+			message = "success";
 		}
 		else {
 			request.setAttribute("error", "There was a problem creating your project. Please try again.");
 			rd = request.getRequestDispatcher("createproject.jsp");
 		}
 		
-		rd.forward(request, response);
+		DataOutputStream out = new DataOutputStream(response.getOutputStream());
+		response.setContentType("text/plain");
+		out.writeBytes(message);
 		
 		
 	}
