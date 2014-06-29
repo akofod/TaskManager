@@ -1,0 +1,61 @@
+#wrapper {
+	height: 100%;
+	width: 100%;
+}
+
+ .task-id,  .task-description, .task-priority, .task-status, .task-time-estimate, .task-time-completed, .task-due-date {
+ 	padding-left:8px;
+ 	padding-right:8px;
+ 	border-bottom:1px dotted;
+ }
+ 
+ .task {
+	background-color:white;
+	border-radius:15px;
+	box-shadow:5px 5px 5px #888888;
+	width:250px;
+	max-height:500px;
+	margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+	opacity:0.5;
+	padding-bottom:2px;
+	border: 1px solid black;
+}
+
+#content-wrapperP {
+	margin-left:auto;
+	margin-right:auto;
+	width:900px;
+	background-color:#F0F0F0;
+	box-shadow:5px 5px 10px #888888;
+}
+
+#Open {
+	border-right:1px dashed;
+	background-color:rgba(255, 0, 0, .1);
+	width:300px;
+	display:table-cell;
+	border-top:1px solid black;
+}
+
+#InProcess {
+	border-right:1px dashed;
+	background-color:rgba(255,255,0,.1);
+	width:300px;
+	display:table-cell;
+	border-top:1px solid black;
+}
+
+#Completed {
+	background-color:rgba(0,255,0,.1);
+	width:300px;
+	display:table-cell;
+	border-top:1px solid black;
+}
+
+#ColHeader {
+	font-weight:bold;
+}
+ 

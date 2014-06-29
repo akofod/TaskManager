@@ -243,6 +243,25 @@ public class TaskManagerDAO {
         }
 	}
 	
+	public int findMaxTask () {
+		try
+        {
+            String sql = "Select max(task_id) as task_id from tasks";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+            	return rs.getInt("task_id");
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return -1;
+	}
+	
 	/**
 	 * Adds a project to a team.
 	 * @param project - The project to be added.
@@ -447,7 +466,7 @@ public class TaskManagerDAO {
             while (rs.next()) {
             	Project project = new Project();
             	project.setId(rs.getInt("project_id"));
-            	project.setDescription("Need to add project descriptions to table");
+            	project.setDescription(rs.getString("description"));
             	project.setFinalDeadline(rs.getDate("final_deadline"));
             	project.setCategoryId(rs.getInt("category_id"));
             	project.setProjectTasks(retrieveTasks(project));
@@ -727,6 +746,20 @@ public class TaskManagerDAO {
 			System.out.println(e);
 		}
 	}
+	
+	public void insertUserTask(String userId, int task) {
+		try
+		{	
+			String sqlInsert = "Insert into usertask values (?,?)";
+			PreparedStatement ps = con.prepareStatement(sqlInsert);
+			ps.setString(1, userId);
+			ps.setInt(2, task);
+			ps.executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
 		
 	public ArrayList<Integer> selectUserTeam(String userId) {
 		ArrayList<Integer> teams = new ArrayList<Integer>();
@@ -813,6 +846,38 @@ public class TaskManagerDAO {
 	
 	public int deleteTask(Task task) {
 		return NO_RECORD;
+	}
+	
+	public boolean deleteTask(int task) {
+		if (deleteUserTask(task)) {
+			try
+			{
+				String sqlDelete = "Delete from tasks where task_id=?";
+				PreparedStatement ps1 = con.prepareStatement(sqlDelete);
+				ps1.setInt(1, task);
+				ps1.executeUpdate();
+				return true;
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteUserTask(int task) {
+		try
+		{
+			String sqlDelete = "Delete from usertask where task_id=?";
+			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
+			ps1.setInt(1, task);
+			ps1.executeUpdate();
+			return true;
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		return false;
 	}
 	
 	public int removeProjectFromTeam(Project project, Team team) {

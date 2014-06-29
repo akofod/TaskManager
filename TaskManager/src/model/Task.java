@@ -61,6 +61,21 @@ public class Task implements Serializable {
 	public void setProjectId(int project_id) {
 		this.project_id = project_id;
 	}
+	public int getTask_id() {
+		return task_id;
+	}
+	public Date getDue_date() {
+		return due_date;
+	}
+	public double getTime_estimate() {
+		return time_estimate;
+	}
+	public double getTime_completed() {
+		return time_completed;
+	}
+	public int getProject_id() {
+		return project_id;
+	}
 	
 	
 }
