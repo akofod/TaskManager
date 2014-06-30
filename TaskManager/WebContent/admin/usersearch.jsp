@@ -16,7 +16,7 @@ $(document).ready(function() {
         $("#user").autocomplete({
             source: function(request, response) {
                 $.ajax({
-                    url: "searchusers.do",
+                    url: "/TaskManager/searchusers.do",
                     type: "GET",
                     data: { "term" : request.term },
                     contentType: "application/json",
@@ -34,7 +34,7 @@ $(document).ready(function() {
 <body>
     <h2>Search for a User</h2>
     <div id="formWrap">
-        <form id="searchForm" method="POST" action="searchusers.do">
+        <form id="searchForm" method="POST" action="/TaskManager/searchusers.do">
             <div id="users" class="ui-widget">
                 <label id="userLabel" for="user">Enter nickname or email:</label>
                 <input id="user" type="text" name="user" />
