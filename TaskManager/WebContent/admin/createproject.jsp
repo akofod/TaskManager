@@ -37,7 +37,8 @@ $(document).ready(function() {
 	    var projectName=$('#projectName').val();
 	    var category=$('#category').val();
 	    var deadline=$('#deadline').val();
-	    if (projectName==="" || category==="" || deadline==="") {
+	    var teamDesc=$('#team').val();
+	    if (projectName==="" || category==="" || deadline==="" || teamDesc==="") {
 	    	error_free=false;
 	    }
 	    if ($('#projectName').hasClass("invalid")) {
@@ -47,6 +48,9 @@ $(document).ready(function() {
             error_free=false;
         }
 	    if ($('#deadline').hasClass("invalid")) {
+            error_free=false;
+        }
+	    if ($('#team').hasClass("invalid")) {
             error_free=false;
         }
 	    if (!error_free){
@@ -61,6 +65,7 @@ function getHTML(strAction)
 	var projectName=$('#projectName').val();
 	var category=$('#category').val();
 	var deadline=$('#deadline').val();
+	var teamDesc=$('#team').val();
 	var html = '';
 	
 	$.ajax({
@@ -68,13 +73,14 @@ function getHTML(strAction)
 		cache: false,
 		url: 'createProject.do',
 		type:'POST',
-		data:{"projectName":projectName,"category":category,"deadline":deadline},
+		data:{"projectName":projectName,"category":category,"deadline":deadline,"team":teamDesc},
 		success: function(ajaxData) {
 			if (ajaxData == "success"){
 				window.top.location.href = 'userHome.jsp';
 			}	
 			else {
 				html = ajaxData;
+				alert(html);
 			}
 		},
 		error: function(request, status, error) {
@@ -87,7 +93,7 @@ function getHTML(strAction)
 <body>
     <h2>Create a New Project</h2>
     <div id="formWrap">
-        <form id="newProjectForm" method="POST" action="createProject.do">
+        <form id="newProjectForm">
             <div class="ui-widget">
                 <label id="projectNameLabel" for="projectName">Project Name:</label>
                 <input id="projectName" type="text" name="projectName" />
@@ -100,8 +106,12 @@ function getHTML(strAction)
                 <label id="deadlineLabel" for="deadline">Project Due Date:</label>
                 <input id="deadline" type="text" name="deadline" />
             </div><br/>
+            <div class="ui-widget">
+                <label id="teamLabel" for="team">Project Team Name:</label>
+                <input id="team" type="text" name="teamDesc" />
+            </div><br/>
             <div id="buttons">
-                <input type="submit" style="width: 100px" id="submit" value="Submit">
+                <input type="button" style="width: 100px" id="submit" value="Submit">
                 <input type="reset" style="width: 100px" id="reset" value="Reset"/>
             </div>
             <div id="error_text">${error}</div>

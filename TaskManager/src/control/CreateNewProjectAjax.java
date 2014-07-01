@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Category;
 import model.Project;
+import model.User;
 
 import org.json.simple.JSONObject;
 
@@ -26,6 +27,7 @@ import dataaccess.TaskManagerDAO;
  * Servlet implementation class SearchUsersAjax
  */
 @WebServlet("/admin/createProject.do")
+
 public class CreateNewProjectAjax extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -59,51 +61,88 @@ public class CreateNewProjectAjax extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher rd;
 		String name = request.getParameter("projectName");
 		String category = request.getParameter("category");
 		String deadline = request.getParameter("deadline");
+		String teamName = request.getParameter("team");
+		System.out.println(teamName);
+		User user = (User) request.getSession(true).getAttribute("user");
 		TaskManagerDAO dao = new TaskManagerDAO();
 		int cat_id;
-		System.out.println("Project: " + name + ", " + category + ", " + deadline);
 		String message = "";
-		
-		Category checkCat = dao.retrieveCategory(category);
-		
-		if (checkCat.getId() == 0) {
-			dao.createCategory(category);
-			cat_id = dao.retrieveCategory(category).getId();
-		}
-		else {
-			cat_id = checkCat.getId();
-		}
-		
-		Project project = new Project();
-		project.setCategoryId(cat_id);
-		project.setDescription(name);
+		boolean goodDate = true;
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		Date due_date = null;
+		Date due_date = null;	
+		
 		try {
 			due_date = formatter.parse(deadline);
 		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}		 
-		project.setFinalDeadline(due_date);
-		
-		if (dao.createProject(project) == 1) {
-			message = "success";
+		catch (Exception e) {
+			goodDate = false;
+		}
+
+		if (name == null || name.trim().length() == 0) {
+			message = "Enter Project Name.";
+		}		
+		else if (category == null || category.trim().length() == 0) {
+			message = "Enter Category.";
+		}
+		else if (deadline == null || deadline.trim().length() == 0) {
+			message = "Enter Deadline.";
+		}
+		else if (teamName == null || teamName.trim().length() == 0) {
+			message = "Enter Team Name.";
+		}
+		else if (!goodDate) {
+			message = "Select Valid Date.";
 		}
 		else {
-			request.setAttribute("error", "There was a problem creating your project. Please try again.");
-			rd = request.getRequestDispatcher("createproject.jsp");
+			Category checkCat = dao.retrieveCategory(category);
+			
+			if (checkCat.getId() == 0) {
+				dao.createCategory(category);
+				cat_id = dao.retrieveCategory(category).getId();
+			}
+			else {
+				cat_id = checkCat.getId();
+			}
+			Project project = new Project();
+			project.setCategoryId(cat_id);
+			project.setDescription(name);
+			project.setFinalDeadline(due_date);
+			if (dao.createProject(project) == 1) {
+				if (dao.createTeam(teamName) == 1) {
+					int maxTeam = dao.findMaxTeam();
+					if (maxTeam > 0) {
+						int maxProject = dao.findMaxProject();
+						if (maxProject > 0) {
+							if (dao.createProjectTeam(maxProject, maxTeam) == 1) {
+								if (dao.createUserTeam(user.getUser_id(), maxTeam) == 1) {
+									message = "success";
+								}
+								else {
+									message = "Failed to create UserTeam row.";
+								}
+							}
+							else {
+								message = "Failed to create ProjectTeam row.";
+							}
+						}
+						else {
+							message = "Failed to locate team id.";
+						}
+					}
+					else {
+						message = "Failed to create project team.";
+					}
+				}
+				else {
+					message = "Failed to create project team.";
+				}
+			}
 		}
-		
 		DataOutputStream out = new DataOutputStream(response.getOutputStream());
 		response.setContentType("text/plain");
 		out.writeBytes(message);
-		
-		
-	}
-
+	}	
 }

@@ -181,6 +181,44 @@ public class TaskManagerDAO {
         }
 	}
 	
+	public int createProjectTeam(int project, int team) {
+		try
+        {
+            String sql = "INSERT INTO teamproject(team_id, project_id) " + 
+            		"VALUES (?,?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, team);
+            ps.setInt(2, project);
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
+	}
+	
+	public int createUserTeam(String user, int team) {
+		try
+        {
+            String sql = "INSERT INTO userteam(user_id, team_id) " + 
+            		"VALUES (?,?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, user);
+            ps.setInt(2, team);
+            ps.executeUpdate();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return NO_RECORD;
+        }
+	}
+	
 	/**
 	 * Create a new category
 	 * @param desctiption - The description of the category.
@@ -254,6 +292,44 @@ public class TaskManagerDAO {
             
             if (rs.next()) {
             	return rs.getInt("task_id");
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return -1;
+	}
+	
+	public int findMaxTeam () {
+		try
+        {
+            String sql = "Select max(team_id) as team_id from teams";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+            	return rs.getInt("team_id");
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return -1;
+	}
+	
+	public int findMaxProject () {
+		try
+        {
+            String sql = "Select max(project_id) as project_id from projects";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+            	return rs.getInt("project_id");
             }
         }
         catch(Exception e){
