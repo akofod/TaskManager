@@ -7,115 +7,43 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="/TaskManager/css/autocomplete.css">
 <link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
-<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/TaskManager/css/mainStyle.css">
+<script src="/TaskManager/js/jquery1.11.js" type="text/javascript"></script>
+<script src="/TaskManager/js/jquery-ui-1.10.4.js" type="text/javascript"></script>
 <script src="/TaskManager/js/jquery.ui.autocomplete.html.js" type="text/javascript"></script>
-<script type="text/javascript">
-
-$(document).ready(function() {
-    $(function() {
-    	$("#category").autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: "createProject.do",
-                    type: "GET",
-                    data: { "term" : request.term },
-                    contentType: "application/json",
-                    dataType: "json",
-                    success: function(data) {
-                        response(data);
-                    }
-               });              
-            }   
-        });
-    });
-    $(function() {
-    	$( "#deadline" ).datepicker();
-    });
-    $('#submit').click(function(event){
-	    var error_free=true;
-	    var projectName=$('#projectName').val();
-	    var category=$('#category').val();
-	    var deadline=$('#deadline').val();
-	    var teamDesc=$('#team').val();
-	    if (projectName==="" || category==="" || deadline==="" || teamDesc==="") {
-	    	error_free=false;
-	    }
-	    if ($('#projectName').hasClass("invalid")) {
-	    	error_free=false;
-	    }
-	    if ($('#category').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if ($('#deadline').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if ($('#team').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if (!error_free){
-	        event.preventDefault();
-	    }
-	    getHTML("createProject");
-	});
-});
-
-function getHTML(strAction) 
-{
-	var projectName=$('#projectName').val();
-	var category=$('#category').val();
-	var deadline=$('#deadline').val();
-	var teamDesc=$('#team').val();
-	var html = '';
-	
-	$.ajax({
-		async: false,
-		cache: false,
-		url: 'createProject.do',
-		type:'POST',
-		data:{"projectName":projectName,"category":category,"deadline":deadline,"team":teamDesc},
-		success: function(ajaxData) {
-			if (ajaxData == "success"){
-				window.top.location.href = 'userHome.jsp';
-			}	
-			else {
-				html = ajaxData;
-				alert(html);
-			}
-		},
-		error: function(request, status, error) {
-			alert(html);
-		}
-	});
-}
-</script>
+<script src="/TaskManager/js/createProjectScripts.js" type="text/javascript"></script>
 </head>
 <body>
-    <h2>Create a New Project</h2>
+    <h3>Create a New Project</h3>
     <div id="formWrap">
+        <center>
         <form id="newProjectForm">
-            <div class="ui-widget">
-                <label id="projectNameLabel" for="projectName">Project Name:</label>
-                <input id="projectName" type="text" name="projectName" />
-            </div><br/>
-            <div class="ui-widget">
-                <label id="categoryLabel" for="category">Category:</label>
-                <input id="category" type="text" name="category" />
-            </div><br/>
-            <div class="ui-widget">
-                <label id="deadlineLabel" for="deadline">Project Due Date:</label>
-                <input id="deadline" type="text" name="deadline" />
-            </div><br/>
-            <div class="ui-widget">
-                <label id="teamLabel" for="team">Project Team Name:</label>
-                <input id="team" type="text" name="teamDesc" />
-            </div><br/>
-            <div id="buttons">
-                <input type="button" style="width: 100px" id="submit" value="Submit">
-                <input type="reset" style="width: 100px" id="reset" value="Reset"/>
-            </div>
-            <div id="error_text">${error}</div>
+        	<table>
+        		<tr>
+        			<td class="label"><label id="projectNameLabel" for="projectName">Project Name:</label></td>
+        			<td><input id="projectName" type="text" name="projectName" /></td>
+        		</tr>
+        		<tr>
+        			<td class="label"><label id="categoryLabel" for="category">Category:</label></td>
+                	<td><input id="category" type="text" name="category" /></td>
+        		</tr>
+        		<tr>
+        			<td class="label"><label id="deadlineLabel" for="deadline">Project Due Date:</label></td>
+                	<td><input id="deadline" type="text" name="deadline" /></td>
+        		</tr>
+        		<tr>
+        			<td class="label"><label id="teamLabel" for="team">Project Team Name:</label></td>
+                	<td><input id="team" type="text" name="teamDesc" /></td>
+        		</tr>
+        		<tr>
+        			<td colspan="2" class="buttons">
+	        			<input type="button" style="width: 100px" id="submit" value="Submit">
+	                	<input type="reset" style="width: 100px" id="reset" value="Reset"/>
+        			</td>
+        		</tr>
+        	</table>
         </form>
+        </center>
     </div>
 </body>
 </html>

@@ -1,16 +1,12 @@
 @CHARSET "ISO-8859-1";
 
-body {
-	background: #2C3539;
-	color: #C2CBCF;
-	font-size: 3em;
-	font-weight: bold;
+table {
+	width: 300px;
+	padding-left:20px;
 }
 
-h2 {
-	padding-top: 1em;
+table td {
 	text-align: center;
-	font-family: 'Oswald', sans-serif;
 }
 
 #buttons {

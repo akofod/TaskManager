@@ -619,6 +619,29 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
+	public int updateUser(User newUser, User oldUser) {
+		
+		int result = 0;
+		
+		try {
+			String sql = "Update Users set user_id = ?, nickname = ?, firstname = ?, lastname=? where user_id = ?";
+			PreparedStatement s = con.prepareStatement(sql);
+			s.setString(1, newUser.getUser_id());
+			s.setString(2, newUser.getNickname());
+			s.setString(3, newUser.getFirstname());
+			s.setString(4, newUser.getLastname());
+			s.setString(5, oldUser.getUser_id());
+			
+			result = s.executeUpdate();
+			
+			s.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	public String updateUserId(String oldId, String newId) {
 		String result = "Email not updated.";
 		if (newId == null || newId.trim().length() == 0) {

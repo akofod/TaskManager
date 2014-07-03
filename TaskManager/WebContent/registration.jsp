@@ -6,155 +6,53 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="/TaskManager/css/registrationStyle.css">
 <link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
-<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/TaskManager/css/mainStyle.css" >
+<script src="/TaskManager/js/jquery1.11.js" type="text/javascript"></script>
+<script src="/TaskManager/js/registrationScripts.js" type="text/javascript"></script>
 <title>New User Registration</title>
-<script type="text/javascript">
-$(document).ready(function() {
-	$('#email').on('input', function() {
-	    var input=$(this);
-	    var re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-	    var is_email=re.test(input.val());
-	    if(is_email){input.removeClass("invalid").addClass("valid");}
-	    else{input.removeClass("valid").addClass("invalid");}
-	});
-	$('#nickname').on('input', function() {
-	    var input=$(this);
-	    var re=/^[a-zA-Z0-9]{6,15}$/;
-	    var is_name=re.test(input.val());
-	    if(is_name){input.removeClass("invalid").addClass("valid");}
-	    else{input.removeClass("valid").addClass("invalid");}
-	});
-	$('#password').on('input', function() {
-		var input=$(this);
-		var re=/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-		var is_password=re.test(input.val());
-		if(is_password){input.removeClass("invalid").addClass("valid");}
-		else{input.removeClass("valid").addClass("invalid");}
-	});
-	$('#confirm').on('input', function() {
-		var input=$(this);
-		var text = input.val();
-		var pass = $('#password').val();
-		if(text == pass){input.removeClass("invalid").addClass("valid");}
-		else{input.removeClass("valid").addClass("invalid");}
-	});
-	$('#email').on('blur', function() {
-		var input=$(this);
-		var valid=input.hasClass("valid");
-		var error_element=$('span', $('#email').parent());
-		if (!valid || input==="") {
-			error_element.removeClass("error").addClass("error_show");
-		}
-		else {
-			error_element.removeClass("error_show").addClass("error");
-		}
-	});
-	$('#nickname').on('blur', function() {
-        var input=$(this);
-        var valid=input.hasClass("valid");
-        var error_element=$('span', $('#nickname').parent());
-        if (!valid || input==="") {
-            error_element.removeClass("error").addClass("error_show");
-        }
-        else {
-            error_element.removeClass("error_show").addClass("error");
-        }
-    });
-	$('#password').on('blur', function() {
-        var input=$(this);
-        var valid=input.hasClass("valid");
-        var error_element=$('span', $('#password').parent());
-        if (!valid || input==="") {
-            error_element.removeClass("error").addClass("error_show");
-        }
-        else {
-            error_element.removeClass("error_show").addClass("error");
-        }
-    });
-	$('#confirm').on('blur', function() {
-        var input=$(this);
-        var valid=input.hasClass("valid");
-        var error_element=$('span', $('#confirm').parent());
-        if (!valid || input==="") {
-            error_element.removeClass("error").addClass("error_show");
-        }
-        else {
-            error_element.removeClass("error_show").addClass("error");
-        }
-    });
-	$('#submit').click(function(event){
-	    var error_free=true;
-	    var email=$('#email').val();
-	    var nickname=$('#nickname').val();
-	    var password=$('#password').val();
-	    if (email==="" || nickname==="" || password==="") {
-	    	error_free=false;
-	    }
-	    if ($('#email').hasClass("invalid")) {
-	    	error_free=false;
-	    }
-	    if ($('#nickname').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if ($('#password').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if ($('#confirm').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if (!error_free){
-	        event.preventDefault();
-	    }
-	});
-	$('#cancel').on('click', function() {
-		
-	});
 
-
-});
-
-</script>
 </head>
 <body>
-    <h2 id="heading">New User Registration</h2>
+    <h3>New User Registration</h3>
+    <div align="center">
     <form id="registrationForm" class="form" method="POST" action="register.do">
-        <div class="ui-widget">
+        <div>
             <label for="email">Email:</label>
-            <input id="email" type="email" style="width: 150px" name="email" />
+            <input id="email" type="email" name="email" />
             <span class="error">A valid email address is required</span>
         </div>
-        <div class="ui-widget">
+        <div>
             <label for="nickname">Nickname:</label>
-            <input id="nickname" type="text" style="width: 150px" name="nickname" />
+            <input id="nickname" type="text" name="nickname" />
             <span class="error">Nickname must be 6-15 characters, numbers and letters only</span>
         </div>
-        <div class="ui-widget">
+        <div>
             <label for="firstname">First Name:</label>
-            <input id="firstname" type="text" style="width: 150px" name="firstname" />
+            <input id="firstname" type="text" name="firstname" />
             <span class="error"></span>
         </div>
-        <div class="ui-widget">
+        <div>
             <label for="lastname">Last Name:</label>
-            <input id="lastname" type="text" style="width: 150px" name="lastname" />
+            <input id="lastname" type="text" name="lastname" />
             <span class="error"></span>
         </div>
-        <div class="ui-widget">
+        <div>
             <label for="password">Password:</label>
-            <input autocomplete="off" id="password" type="password" style="width: 150px" name="password" />
+            <input autocomplete="off" id="password" type="password" name="password" />
             <span class="error">Password must be at least 8 characters, with at least one capital letter, one lowercase letter, and one number</span>
         </div>
-        <div class="ui-widget">
+        <div>
             <label for="confirm">Confirm Password:</label>
-            <input autocomplete="off" id="confirm" type="password" style="width: 150px" name="confirm" />
+            <input autocomplete="off" id="confirm" type="password" name="confirm" />
             <span class="error">Does not match password</span>
         </div>
         <div id="buttons">
-            <input type="submit" style="width: 100px" id="submit" value="Submit">
-            <input type="reset" style="width: 100px" id="reset" value="Reset"/>
+            <input type="submit" id="submit" value="Submit">
+            <input type="reset" id="reset" value="Reset"/>
             
         </div>
         <div id="error_text">${error}</div>
     </form>
-    
+    </div>
 </body>
 </html>

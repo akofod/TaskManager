@@ -1,16 +1,5 @@
 @CHARSET "ISO-8859-1";
 
-#heading {
-	font-family: sans-serif;
-	text-align: center;
-}
-
-#registrationForm label {
-	display: inline-block;
-	width: 100px;
-	text-align: right;
-}
-
 #regSuccess {
 	color: blue;
 	text-align: center;
@@ -19,11 +8,6 @@
 
 .form div {
 	margin-top: 1em;
-}
-
-#registrationForm textarea{
-    vertical-align: top;
-    height: 5em;
 }
 
 #buttons {

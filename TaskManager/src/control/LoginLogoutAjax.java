@@ -3,6 +3,7 @@ package control;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -59,16 +60,19 @@ public class LoginLogoutAjax extends HttpServlet {
 				request.getSession(true).invalidate();
 				message = "Log in unsuccessful, please try again.";
 			}
+			
+			DataOutputStream out = new DataOutputStream(response.getOutputStream());
+			response.setContentType("text/plain");
+			out.writeBytes(message);
 		}
 		else
 		{
 			deleteCookies(request, response);
 			request.getSession(true).invalidate();
-			message = "You have successfully logged out.";
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher.forward(request, response);
 		}
-		DataOutputStream out = new DataOutputStream(response.getOutputStream());
-		response.setContentType("text/plain");
-		out.writeBytes(message);
+		
 	}
 	
 	public void deleteCookies (HttpServletRequest request, HttpServletResponse response) {
