@@ -13,6 +13,7 @@
 $(document).ready(function() {
 	$(".newProject").colorbox({iframe: true, innerWidth:400, innerHeight:250});
     $(".accountAdmin").colorbox({iframe: true, innerWidth:400, innerHeight:300});
+    $(".settings").colorbox({iframe: true, innerWidth:400, innerHeight:300});
 });
 </script>
 <title>Home</title>
@@ -29,28 +30,24 @@ $(document).ready(function() {
 	<a href="createproject.jsp" class="newProject">New Project</a>
 	</div>
 	<div class="content">
-		<table border="1">
-			<tr>
-				<td><center>Project Description</center></td>
-				<td><center>Project Deadline</center></td>
-			</tr>
 		
 			<c:forEach var="proj" items="${userProjects}">
-				<c:set var="projectURL">
-					<c:url value="project.jsp">
+				<c:set var="settingsURL">
+					<c:url value="projectSettings.jsp">
 						<c:param name="projectID" value="${proj.project_id}"/>
 					</c:url>
 				</c:set>
-				<tr>
-					<td>
-						<center><a href="${projectURL}">${proj.description}</a></center>
-					</td>
-					<td>
-						<center><a href="${projectURL}">${proj.final_deadline}</a></center>
-					</td>
-				</tr>
+				<c:set var="taskURL">
+					<c:url value="project.jsp">
+						<c:param name="projectID" value="${proj.project_id }" />
+					</c:url>
+				</c:set>
+				<div class="project">
+					<div class="project-description"><a href="${taskURL}">${proj.description}</a></div>
+					<div class="project-dueDate">Due: ${proj.final_deadline}</div>
+					<div class="project-footer"><a class="settings" href="${settingsURL}">Settings . . .</a></div>
+				</div>
 			</c:forEach>
-		</table>
 	</div>
 </div>
 	

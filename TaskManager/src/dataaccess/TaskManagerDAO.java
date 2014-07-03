@@ -54,18 +54,6 @@ public class TaskManagerDAO {
 	}
 	
 	/**
-	 * Explicitly close the database connection.
-	 */
-	public void close() {
-		try {
-			con.close();
-		}
-		catch(SQLException e) {
-			System.err.println("SQLException: " + e.getMessage());
-		}
-	}
-	
-	/**
 	 * Authenticates a users credentials.
 	 * @param username The user's username.
 	 * @param password The user's password.
@@ -104,6 +92,8 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO users(user_id, nickname, firstname, " +
                     "lastname, password, salt) VALUES (?,?,?,?,?,?) ";
+            
+            getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql);
             String salt = getSalt();
@@ -117,6 +107,8 @@ public class TaskManagerDAO {
             ps.setString(6, salt);
             
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -140,7 +132,7 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Projects(category_id, final_deadline, description) " + 
             		"VALUES (?,?,?) ";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, project.getCategoryId());
@@ -148,6 +140,8 @@ public class TaskManagerDAO {
             ps.setString(3, project.getDescription());
             
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -167,12 +161,14 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Teams(description) " + 
             		"VALUES (?) ";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, description);
             
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -186,12 +182,14 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO teamproject(team_id, project_id) " + 
             		"VALUES (?,?) ";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, team);
             ps.setInt(2, project);
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -205,12 +203,14 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO userteam(user_id, team_id) " + 
             		"VALUES (?,?) ";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, user);
             ps.setInt(2, team);
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -230,12 +230,14 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Categories(description) " + 
             		"VALUES (?) ";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, description);
             
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -261,7 +263,7 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Tasks(description, due_date, " +
                     "priority, time_estimate, time_completed, status, project_id) VALUES (?,?,?,?,?,?,?) ";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, task.getDescription());
@@ -273,6 +275,8 @@ public class TaskManagerDAO {
             ps.setInt(7, task.getProjectId());
             
             ps.executeUpdate();
+            ps.close();
+            con.close();
             return SUCCESS;
         }
         catch(Exception e){
@@ -282,60 +286,79 @@ public class TaskManagerDAO {
 	}
 	
 	public int findMaxTask () {
+		int result = -1;
 		try
         {
             String sql = "Select max(task_id) as task_id from tasks";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-            	return rs.getInt("task_id");
+            	result =  rs.getInt("task_id");
             }
+            
+            rs.close();
+            ps.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
         }
-		return -1;
+		return result;
 	}
 	
 	public int findMaxTeam () {
+		
+		int result = -1;
+		
 		try
         {
             String sql = "Select max(team_id) as team_id from teams";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-            	return rs.getInt("team_id");
+            	result = rs.getInt("team_id");
             }
+            
+            rs.close();
+            ps.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
         }
-		return -1;
+		return result;
 	}
 	
 	public int findMaxProject () {
+		
+		int result = -1;
+		
 		try
         {
             String sql = "Select max(project_id) as project_id from projects";
-
+            getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-            	return rs.getInt("project_id");
+            	result =  rs.getInt("project_id");
             }
+            
+            rs.close();
+            ps.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
         }
-		return -1;
+		return result;
 	}
 	
 	/**
@@ -388,7 +411,7 @@ public class TaskManagerDAO {
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
             String sql = "SELECT * FROM tasks WHERE project_id = ?";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setInt(1, project.getId());
 
@@ -406,6 +429,10 @@ public class TaskManagerDAO {
                 task.setTimeEstimate(rs.getDouble("time_estimate"));
                 tasks.add(task);
             }
+            
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -426,7 +453,7 @@ public class TaskManagerDAO {
 		User user = new User();
 		try {
             String sql = "SELECT * FROM users WHERE user_id = ?";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, id);
 
@@ -448,6 +475,10 @@ public class TaskManagerDAO {
                  user.setPassword(pass);
                  user.setSalt(salt);
             }
+            
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -459,7 +490,7 @@ public class TaskManagerDAO {
 		User user = new User();
 		try {
             String sql = "SELECT * FROM users WHERE nickname = ?";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, nickname);
 
@@ -481,6 +512,9 @@ public class TaskManagerDAO {
                  user.setPassword(pass);
                  user.setSalt(salt);
             }
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -500,7 +534,7 @@ public class TaskManagerDAO {
 		Project project = new Project();
 		try {
             String sql = "SELECT * FROM projects WHERE project_id = ?";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setInt(1, id);
 
@@ -513,6 +547,10 @@ public class TaskManagerDAO {
             	project.setCategoryId(rs.getInt("category_id"));
             	project.setProjectTasks(retrieveTasks(project));
             }
+            
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -532,7 +570,7 @@ public class TaskManagerDAO {
             sql += "SELECT task_id from usertask where user_id = ?) ";
             sql += "UNION SELECT project_id from teamproject where team_id in (";
             sql += "SELECT team_id from userteam where user_id = ?))";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, user.getId());
             s.setString(2, user.getId());
@@ -548,6 +586,9 @@ public class TaskManagerDAO {
             	project.setProjectTasks(retrieveTasks(project));
                 projects.add(project);
             }
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -567,7 +608,7 @@ public class TaskManagerDAO {
 		Category cat = new Category();
 		try {
 			String sql = "SELECT * FROM categories WHERE description = ?";
-
+			getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, desc);
 
@@ -577,6 +618,9 @@ public class TaskManagerDAO {
             	cat.setId(rs.getInt("category_id"));
             	cat.setDescription(rs.getString("description"));
             }
+            rs.close();
+            s.close();
+            con.close();
             
 		}
 		catch(Exception e) {
@@ -594,7 +638,7 @@ public class TaskManagerDAO {
 		ArrayList<Category> list = new ArrayList<Category>();
 		try {
 			String sql = "SELECT * FROM categories WHERE description LIKE ?";
-
+			getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1,"%" + term + "%");
 
@@ -606,6 +650,9 @@ public class TaskManagerDAO {
             	cat.setDescription(rs.getString("description"));
             	list.add(cat);
             }
+            rs.close();
+            s.close();
+            con.close();
             
 		}
 		catch(Exception e) {
@@ -625,6 +672,7 @@ public class TaskManagerDAO {
 		
 		try {
 			String sql = "Update Users set user_id = ?, nickname = ?, firstname = ?, lastname=? where user_id = ?";
+			getConnection();
 			PreparedStatement s = con.prepareStatement(sql);
 			s.setString(1, newUser.getUser_id());
 			s.setString(2, newUser.getNickname());
@@ -660,6 +708,7 @@ public class TaskManagerDAO {
 			try
 			{
 				String sql = "Update users set user_id=? where user_id=?";
+				getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, newId);
 				ps.setString(2, oldId);
@@ -671,6 +720,8 @@ public class TaskManagerDAO {
 				insertUserTask(newId, tasks);
 				insertUserTeam(newId, teams);
 				result = "Email updated successfully.";
+				ps.close();
+				con.close();
 			}
 			catch (Exception e){
 				System.out.println(e);
@@ -694,11 +745,14 @@ public class TaskManagerDAO {
 			try
 			{
 				String sql = "Update users set nickname=? where user_id=?";
+				getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, nickname);
 				ps.setString(2, userId);
 				ps.executeUpdate();
 				result = "Nickname updated successfully.";
+				ps.close();
+				con.close();
 			}
 			catch (Exception e){
 				System.out.println(e);
@@ -721,11 +775,14 @@ public class TaskManagerDAO {
 		else {
 			try {
 				String sql = "Update users set firstname=? where user_id=?";
+				getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, newFirstName);
 				ps.setString(2, userId);
 				ps.executeUpdate();
 				result = "First name updated successfully.";
+				ps.close();
+				con.close();
 			}
 			catch (Exception e){
 				System.out.println(e);
@@ -748,11 +805,14 @@ public class TaskManagerDAO {
 		else {
 			try {
 				String sql = "Update users set lastname=? where user_id=?";
+				getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, lastname);
 				ps.setString(2, userId);
 				ps.executeUpdate();
 				result = "Last name updated successfully.";
+				ps.close();
+				con.close();
 			}
 			catch (Exception e){
 				System.out.println(e);
@@ -777,6 +837,7 @@ public class TaskManagerDAO {
 				try
 				{
 					String sql = "Update users set password=?, salt=? where user_id=?";
+					getConnection();
 					PreparedStatement ps = con.prepareStatement(sql);
 					String salt = getSalt();
 					String newPassSecure = getSecurePassword(newPass, salt);
@@ -785,6 +846,8 @@ public class TaskManagerDAO {
 					ps.setString(3, userName);
 					ps.executeUpdate();
 					result = "Password updated successfully";
+					ps.close();
+					con.close();
 				}
 				catch (Exception e){
 					System.out.println(e);
@@ -803,6 +866,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlTask = "Select task_id from usertask where user_id=?";
+			getConnection();
 			PreparedStatement ps0 = con.prepareStatement(sqlTask);	
 			ps0.setString(1, userId);
 			ResultSet rs = ps0.executeQuery();
@@ -810,6 +874,9 @@ public class TaskManagerDAO {
 			while (rs.next()) {
 				tasks.add(new Integer(rs.getInt("task_id")));
 			}
+			rs.close();
+			ps0.close();
+			con.close();
 		}
 		catch (Exception e){
 			System.out.println(e);
@@ -821,9 +888,12 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlDelete = "Delete from usertask where user_id=?";
+			getConnection();
 			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 			ps1.setString(1, userId);
 			ps1.executeUpdate();
+			ps1.close();
+			con.close();
 		}
 		catch (Exception e){
 			System.out.println(e);
@@ -835,10 +905,13 @@ public class TaskManagerDAO {
 		{	
 			for (Integer i : taskList) {
 				String sqlInsert = "Insert into usertask values (?,?)";
+				getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlInsert);
 				ps.setString(1, userId);
 				ps.setInt(2, i);
 				ps.executeUpdate();
+				ps.close();
+				con.close();
 			}
 		}
 		catch (Exception e){
@@ -850,10 +923,13 @@ public class TaskManagerDAO {
 		try
 		{	
 			String sqlInsert = "Insert into usertask values (?,?)";
+			getConnection();
 			PreparedStatement ps = con.prepareStatement(sqlInsert);
 			ps.setString(1, userId);
 			ps.setInt(2, task);
 			ps.executeUpdate();
+			ps.close();
+			con.close();
 		}
 		catch (Exception e){
 			System.out.println(e);
@@ -865,6 +941,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlTeam = "Select team_id from userteam where user_id=?";
+			getConnection();
 			PreparedStatement ps0 = con.prepareStatement(sqlTeam);	
 			ps0.setString(1, userId);
 			ResultSet rs = ps0.executeQuery();
@@ -872,6 +949,9 @@ public class TaskManagerDAO {
 			while (rs.next()) {
 				teams.add(new Integer(rs.getInt("team_id")));
 			}
+			rs.close();
+			ps0.close();
+			con.close();
 		}
 		catch (Exception e){
 			System.out.println(e);
@@ -883,9 +963,12 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlDelete = "Delete from userteam where user_id=?";
+			getConnection();
 			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 			ps1.setString(1, userId);
 			ps1.executeUpdate();
+			ps1.close();
+			con.close();
 		}
 		catch (Exception e){
 			System.out.println(e);
@@ -897,10 +980,13 @@ public class TaskManagerDAO {
 		{	
 			for (Integer i : teamList) {
 				String sqlInsert = "Insert into userteam values (?,?)";
+				getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlInsert);
 				ps.setString(1, userId);
 				ps.setInt(2, i);
 				ps.executeUpdate();
+				ps.close();
+				con.close();
 			}
 		}
 		catch (Exception e){
@@ -952,9 +1038,12 @@ public class TaskManagerDAO {
 			try
 			{
 				String sqlDelete = "Delete from tasks where task_id=?";
+				getConnection();
 				PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 				ps1.setInt(1, task);
 				ps1.executeUpdate();
+				ps1.close();
+				con.close();
 				return true;
 			}
 			catch (Exception e){
@@ -968,9 +1057,12 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlDelete = "Delete from usertask where task_id=?";
+			getConnection();
 			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 			ps1.setInt(1, task);
 			ps1.executeUpdate();
+			ps1.close();
+			con.close();
 			return true;
 		}
 		catch (Exception e){
@@ -1031,7 +1123,7 @@ public class TaskManagerDAO {
 		boolean used = false;
 		try {
             String sql = "SELECT * FROM users WHERE nickname = ?";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, nickname);
 
@@ -1040,6 +1132,9 @@ public class TaskManagerDAO {
             if (rs.next()) {
             	 used = true;
             }
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -1051,7 +1146,7 @@ public class TaskManagerDAO {
 		boolean used = false;
 		try {
             String sql = "SELECT * FROM users WHERE user_id = ?";
-
+            getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, userId);
 
@@ -1060,6 +1155,9 @@ public class TaskManagerDAO {
             if (rs.next()) {
             	 used = true;
             }
+            rs.close();
+            s.close();
+            con.close();
         }
         catch(Exception e){
             System.out.println(e);
@@ -1107,7 +1205,7 @@ public class TaskManagerDAO {
 		
 		try {
 			String sql = "SELECT * FROM users WHERE user_id LIKE ?";
-
+			getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, name + "%");
 
@@ -1117,6 +1215,9 @@ public class TaskManagerDAO {
             	String user = rs.getString("user_id");
             	list.add(user);
             }
+            rs.close();
+            s.close();
+            con.close();
             
 		}
 		catch(Exception e) {
@@ -1125,7 +1226,7 @@ public class TaskManagerDAO {
 		
 		try {
 			String sql = "SELECT * FROM users WHERE nickname LIKE ?";
-
+			getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, name + "%");
 
@@ -1135,6 +1236,9 @@ public class TaskManagerDAO {
             	String user = rs.getString("nickname");
             	list.add(user);
             }
+            rs.close();
+            s.close();
+            con.close();
             
 		}
 		catch(Exception e) {

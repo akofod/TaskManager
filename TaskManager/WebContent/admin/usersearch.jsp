@@ -7,8 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="/TaskManager/css/autocomplete.css">
 <link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
-<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/TaskManager/css/mainStyle.css">
+<script src="/TaskManager/js/jquery1.11.js" type="text/javascript"></script>
+<script src="/TaskManager/js/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
 <script src="/TaskManager/js/jquery.ui.autocomplete.html.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -32,10 +33,10 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-    <h2>Search for a User</h2>
+    <h3>Search for a User</h3>
     <div id="formWrap">
         <form id="searchForm" method="POST" action="/TaskManager/searchusers.do">
-            <div id="users" class="ui-widget">
+            <div id="users">
                 <label id="userLabel" for="user">Enter nickname or email:</label>
                 <input id="user" type="text" name="user" />
             </div>

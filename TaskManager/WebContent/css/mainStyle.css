@@ -138,3 +138,61 @@ td .text {
 	width:150px;
 	text-align: right;
 }
+
+.project {
+	background-color:white;
+	border-radius:5px;
+	box-shadow:5px 5px 5px #888888;
+	width:200px;
+	margin:15px;
+	padding-bottom:2px;
+	float: left;
+}
+
+ .ui-state-highlight { 
+ 	height: 75px; 
+ 	line-height: 75px; 
+ }
+ 
+ .project-description {
+ 	background-color:black;
+ 	color:white;
+ 	border-radius:5px 5px 0px 0px;
+ 	padding-left:8px;
+ 	padding-right:8px;
+ }
+ 
+ .project-dueDate {
+ 	padding-left:8px;
+ 	padding-right:8px;
+ 	border-bottom:1px dotted;
+ }
+ 
+ .project-footer {
+	 padding-left:8px;
+	 padding-right:8px;
+	 border-radius:0px 0px 15px 15px;
+	 border-top:1px dotted;
+	 text-align:center;
+ }
+ 
+#navigation { 
+	width:200px; 
+	height:100%; 
+	float:right; 
+	border: 1px solid black; 
+	background:white;
+}
+
+.link { 
+	margin: 0;
+    border: 0;
+    background: none;
+    overflow: visible;
+    color: blue;
+    cursor: pointer; 
+}
+
+li {
+	display: inline;
+}

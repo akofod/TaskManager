@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
 <link rel="stylesheet" href="/TaskManager/css/mainStyle.css">
 <script src="/TaskManager/js/jquery1.11.js" type="text/javascript"></script>
-<script src="/TaskManager/js/jquery-ui-1.10.4.js" type="text/javascript"></script>
+<script src="/TaskManager/js/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
 <script src="/TaskManager/js/jquery.ui.autocomplete.html.js" type="text/javascript"></script>
 <script src="/TaskManager/js/createProjectScripts.js" type="text/javascript"></script>
 </head>
