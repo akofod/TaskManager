@@ -32,10 +32,6 @@
                 	<td><input id="deadline" type="text" name="deadline" /></td>
         		</tr>
         		<tr>
-        			<td class="label"><label id="teamLabel" for="team">Project Team Name:</label></td>
-                	<td><input id="team" type="text" name="teamDesc" /></td>
-        		</tr>
-        		<tr>
         			<td colspan="2" class="buttons">
 	        			<input type="button" style="width: 100px" id="submit" value="Submit">
 	                	<input type="reset" style="width: 100px" id="reset" value="Reset"/>

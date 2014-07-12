@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/TaskManager/css/mainStyle.css">
 <link rel="stylesheet" href="../css/colorbox.css" type="text/css" media="screen" />
 <script src="/TaskManager/js/jquery1.11.js" type="text/javascript"></script>
-<script type="text/javascript" src="../js/jquery.colorbox.js"></script>
+<script type="text/javascript" src="../js/jquery.colorbox-min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$(".newProject").colorbox({iframe: true, innerWidth:400, innerHeight:250});

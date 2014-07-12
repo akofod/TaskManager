@@ -29,6 +29,27 @@ $(document).ready(function() {
             }   
         });
     });
+    var project_id = window.location.href.slice(window.location.href.indexOf('=') + 1);
+    $("#submit").click(function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/TaskManager/searchusers.do',
+            type:'POST',
+            data:{"project":project_id, "user":$("#user").val()},
+            success: function(ajaxData) {
+                if (ajaxData == "User Added."){
+                    alert(ajaxData);
+                    window.top.location.href = 'userHome.jsp';
+                }
+                else {
+                	alert(ajaxData);
+                }
+            },
+            error: function(request, status, error) {
+                alert('Error');
+            }
+        }); 
+    });
 });
 </script>
 </head>

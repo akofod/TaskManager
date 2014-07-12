@@ -64,8 +64,6 @@ public class CreateNewProjectAjax extends HttpServlet {
 		String name = request.getParameter("projectName");
 		String category = request.getParameter("category");
 		String deadline = request.getParameter("deadline");
-		String teamName = request.getParameter("team");
-		System.out.println(teamName);
 		User user = (User) request.getSession(true).getAttribute("user");
 		TaskManagerDAO dao = new TaskManagerDAO();
 		int cat_id;
@@ -90,9 +88,6 @@ public class CreateNewProjectAjax extends HttpServlet {
 		else if (deadline == null || deadline.trim().length() == 0) {
 			message = "Enter Deadline.";
 		}
-		else if (teamName == null || teamName.trim().length() == 0) {
-			message = "Enter Team Name.";
-		}
 		else if (!goodDate) {
 			message = "Select Valid Date.";
 		}
@@ -111,34 +106,19 @@ public class CreateNewProjectAjax extends HttpServlet {
 			project.setDescription(name);
 			project.setFinalDeadline(due_date);
 			if (dao.createProject(project) == 1) {
-				if (dao.createTeam(teamName) == 1) {
-					int maxTeam = dao.findMaxTeam();
-					if (maxTeam > 0) {
-						int maxProject = dao.findMaxProject();
-						if (maxProject > 0) {
-							if (dao.createProjectTeam(maxProject, maxTeam) == 1) {
-								if (dao.createUserTeam(user.getUser_id(), maxTeam) == 1) {
-									message = "success";
-								}
-								else {
-									message = "Failed to create UserTeam row.";
-								}
-							}
-							else {
-								message = "Failed to create ProjectTeam row.";
-							}
-						}
-						else {
-							message = "Failed to locate team id.";
-						}
-					}
-					else {
-						message = "Failed to create project team.";
-					}
+				System.out.println("Project created successfully.");
+				int maxProject = dao.findMaxProject();
+				project.setId(maxProject);
+				if (dao.addUserToProject(user, project) == 1) {
+					message = "success";
+					System.out.println("User added successfully.");
 				}
 				else {
-					message = "Failed to create project team.";
+					message = "Add user failed";
 				}
+			}
+			else {
+				message = "Create project failed.";
 			}
 		}
 		DataOutputStream out = new DataOutputStream(response.getOutputStream());

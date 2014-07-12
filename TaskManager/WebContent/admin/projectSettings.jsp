@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,11 +17,36 @@
     <center>
 		<a href="">Update Description</a><br>
 		<a href="">Change Due Date</a><br>
-		<a href="usersearch.jsp">Invite Users</a><br>
-		<a href="">Delete Project</a>
+		<c:url var="inviteUsers" value="usersearch.jsp">
+            <c:param name="project" value="<%= request.getParameter(\"projectID\") %>"/>
+        </c:url>
+		<a id="invite_user" href="${inviteUsers}">Invite Users</a><br>
+		<a id="delete_project" href="userHome.jsp">Delete Project</a>
     </center>
 <br>    
 <div id="outputAuth" style="width:100%;">
 </div>
+<script>
+$(document).ready(function() {
+	var project_id = window.location.href.slice(window.location.href.indexOf('=') + 1);
+	$("#delete_project").click(function(event) {
+		event.preventDefault();
+		$.ajax({
+	        url: '/TaskManager/DeleteProjectAjax',
+	        type:'POST',
+	        data:{"project":project_id},
+	        success: function(ajaxData) {
+	            if (ajaxData == "Project deleted."){
+	                alert(ajaxData);
+	                window.top.location.href = 'userHome.jsp';
+	            }
+	        },
+	        error: function(request, status, error) {
+	            alert('Error');
+	        }
+	    }); 
+	});
+});
+</script>
 </body>
 </html>

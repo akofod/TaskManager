@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import model.Category;
 import model.Project;
 import model.Task;
-import model.Team;
 import model.User;
 
 public class TaskManagerDAO {
@@ -126,7 +125,6 @@ public class TaskManagerDAO {
 	 * false otherwise.
 	 */
 	public int createProject(Project project) {
-		//TODO: Should a team also be assigned when a project is created?
 		java.sql.Date sqlDate = new java.sql.Date(project.getFinalDeadline().getTime());
 		try
         {
@@ -150,73 +148,54 @@ public class TaskManagerDAO {
         }
 	}
 	
-	/**
-	 * Create a new team.
-	 * @param description - The description of the team.
-	 * @return True if the team was created successfully,
-	 * false otherwise.
-	 */
-	public int createTeam(String description) {
+	public int addUserToProject(User user, Project project) {
+		boolean alreadyAssigned = false;
 		try
-        {
-            String sql = "INSERT INTO Teams(description) " + 
-            		"VALUES (?) ";
-            getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);
+		{
+			String sqlCheck = "Select project_id from userproject where user_id=?";
+			getConnection();
+			PreparedStatement psCheck = con.prepareStatement(sqlCheck);	
+			psCheck.setString(1, user.getId());
+			ResultSet rs = psCheck.executeQuery();
+			
+			while (rs.next()) {
+				if (rs.getInt("project_id") == project.getId()) {
+					alreadyAssigned = true;
+					break;
+				}
+			}
+			rs.close();
+			psCheck.close();
+			con.close();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		
+		if (!alreadyAssigned) {
+			try
+        	{
+            	String sql = "INSERT INTO userproject(user_id, project_id) " + 
+            		"VALUES (?,?) ";
+            	getConnection();
+            	PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setString(1, description);
+            	ps.setString(1, user.getId());
+            	ps.setInt(2, project.getId());
             
-            ps.executeUpdate();
-            ps.close();
-            con.close();
-            return SUCCESS;
-        }
-        catch(Exception e){
-            System.out.println(e);
-            return NO_RECORD;
-        }
-	}
-	
-	public int createProjectTeam(int project, int team) {
-		try
-        {
-            String sql = "INSERT INTO teamproject(team_id, project_id) " + 
-            		"VALUES (?,?) ";
-            getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);
-
-            ps.setInt(1, team);
-            ps.setInt(2, project);
-            ps.executeUpdate();
-            ps.close();
-            con.close();
-            return SUCCESS;
-        }
-        catch(Exception e){
-            System.out.println(e);
-            return NO_RECORD;
-        }
-	}
-	
-	public int createUserTeam(String user, int team) {
-		try
-        {
-            String sql = "INSERT INTO userteam(user_id, team_id) " + 
-            		"VALUES (?,?) ";
-            getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);
-
-            ps.setString(1, user);
-            ps.setInt(2, team);
-            ps.executeUpdate();
-            ps.close();
-            con.close();
-            return SUCCESS;
-        }
-        catch(Exception e){
-            System.out.println(e);
-            return NO_RECORD;
-        }
+            	ps.executeUpdate();
+            	ps.close();
+            	con.close();
+            	return SUCCESS;
+        	}
+        	catch(Exception e){
+            	System.out.println(e);
+            	return NO_RECORD;
+        	}
+		}
+		else {
+			return RECORD_EXISTS;
+		}
 	}
 	
 	/**
@@ -309,32 +288,6 @@ public class TaskManagerDAO {
 		return result;
 	}
 	
-	public int findMaxTeam () {
-		
-		int result = -1;
-		
-		try
-        {
-            String sql = "Select max(team_id) as team_id from teams";
-            getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);
-
-            ResultSet rs = ps.executeQuery();
-            
-            if (rs.next()) {
-            	result = rs.getInt("team_id");
-            }
-            
-            rs.close();
-            ps.close();
-            con.close();
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-		return result;
-	}
-	
 	public int findMaxProject () {
 		
 		int result = -1;
@@ -362,28 +315,6 @@ public class TaskManagerDAO {
 	}
 	
 	/**
-	 * Adds a project to a team.
-	 * @param project - The project to be added.
-	 * @param team - The team to add the project to.
-	 * @return True if the project was added successfully,
-	 * false otherwise.
-	 */
-	public int addProjectToTeam(Project project, Team team) {
-		return NO_RECORD; // TODO: Can a team also be added to a project?
-	}
-	
-	/**
-	 * Adds a user to a team.
-	 * @param user - The user to be added.
-	 * @param team - The team to add the user to.
-	 * @return True if the user was added successfully,
-	 * false otherwise.
-	 */
-	public int addUserToTeam(User user, Team team) {
-		return NO_RECORD;
-	}
-	
-	/**
 	 * Assigns a task to a user.
 	 * @param task - The task to be assigned.
 	 * @param user - The user to assign the task to.
@@ -400,10 +331,6 @@ public class TaskManagerDAO {
 	 * @return All tasks for user
 	 */
 	public ArrayList<Task> retrieveTasks(User user) {
-		return null;
-	}
-	
-	public ArrayList<Task> retrieveTasks(Team team) {
 		return null;
 	}
 	
@@ -526,10 +453,6 @@ public class TaskManagerDAO {
 		return null;
 	}
 	
-	public ArrayList<User> retrieveUsers(Team team) {
-		return null;
-	}
-	
 	public Project retrieveProject(int id) {
 		Project project = new Project();
 		try {
@@ -558,22 +481,14 @@ public class TaskManagerDAO {
 		return project;
 	}
 	
-	public ArrayList<Project> retrieveProjects(Team team) {
-		return null;
-	}
-	
 	public ArrayList<Project> retrieveProjects(User user) {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		try {
-            String sql = "SELECT * FROM projects WHERE project_id in (";
-            sql += "SELECT project_id from tasks where task_id in (";
-            sql += "SELECT task_id from usertask where user_id = ?) ";
-            sql += "UNION SELECT project_id from teamproject where team_id in (";
-            sql += "SELECT team_id from userteam where user_id = ?))";
+            String sql = "SELECT * FROM projects WHERE project_id in "
+            		+ "(SELECT project_id FROM userproject WHERE user_id = ?)";
             getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, user.getId());
-            s.setString(2, user.getId());
 
             ResultSet rs = s.executeQuery();
 
@@ -594,10 +509,6 @@ public class TaskManagerDAO {
             System.out.println(e);
         }
 		return projects;
-	}
-	
-	public Team retrieveTeam(int id) {
-		return null;
 	}
 	
 	public Category retrieveCategory(int id) {
@@ -713,12 +624,9 @@ public class TaskManagerDAO {
 				ps.setString(1, newId);
 				ps.setString(2, oldId);
 				ArrayList<Integer> tasks = selectUserTask(oldId);
-				ArrayList<Integer> teams = selectUserTeam(oldId);
 				deleteUserTask(oldId);
-				deleteUserTeam(oldId);
 				ps.executeUpdate();
 				insertUserTask(newId, tasks);
-				insertUserTeam(newId, teams);
 				result = "Email updated successfully.";
 				ps.close();
 				con.close();
@@ -935,70 +843,6 @@ public class TaskManagerDAO {
 			System.out.println(e);
 		}
 	}
-		
-	public ArrayList<Integer> selectUserTeam(String userId) {
-		ArrayList<Integer> teams = new ArrayList<Integer>();
-		try
-		{
-			String sqlTeam = "Select team_id from userteam where user_id=?";
-			getConnection();
-			PreparedStatement ps0 = con.prepareStatement(sqlTeam);	
-			ps0.setString(1, userId);
-			ResultSet rs = ps0.executeQuery();
-			
-			while (rs.next()) {
-				teams.add(new Integer(rs.getInt("team_id")));
-			}
-			rs.close();
-			ps0.close();
-			con.close();
-		}
-		catch (Exception e){
-			System.out.println(e);
-		}
-		return teams;
-	}
-	
-	public void deleteUserTeam(String userId) {
-		try
-		{
-			String sqlDelete = "Delete from userteam where user_id=?";
-			getConnection();
-			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
-			ps1.setString(1, userId);
-			ps1.executeUpdate();
-			ps1.close();
-			con.close();
-		}
-		catch (Exception e){
-			System.out.println(e);
-		}
-	}
-	
-	public void insertUserTeam(String userId, ArrayList<Integer> teamList) {
-		try
-		{	
-			for (Integer i : teamList) {
-				String sqlInsert = "Insert into userteam values (?,?)";
-				getConnection();
-				PreparedStatement ps = con.prepareStatement(sqlInsert);
-				ps.setString(1, userId);
-				ps.setInt(2, i);
-				ps.executeUpdate();
-				ps.close();
-				con.close();
-			}
-		}
-		catch (Exception e){
-			System.out.println(e);
-		}
-	}
-	
-
-	
-	public int updateTeam(int team_id, String description) {
-		return NO_RECORD;
-	}
 	
 	public int updateProject(int project_id, String description, int catId, Date deadline) {
 		return NO_RECORD;
@@ -1017,12 +861,29 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
-	public int deleteTeam(Team team) {
-		return NO_RECORD;
-	}
-	
-	public int deleteProject(Project project) {
-		return NO_RECORD;
+	public boolean deleteProject(Project project) {
+		
+		ArrayList<Task> projectTasks = retrieveTasks(project);
+		for(Task t : projectTasks) {
+			deleteTask(t.getId());
+		}
+		if (removeUserFromProject(project)) {
+			try
+			{
+				String sql = "Delete from projects where project_id=?";
+				getConnection();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setInt(1, project.getProject_id());
+				ps.executeUpdate();
+				ps.close();
+				con.close();
+				return true;
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+		}
+		return false;
 	}
 	
 	public int deleteCategory(Category category) {
@@ -1071,12 +932,22 @@ public class TaskManagerDAO {
 		return false;
 	}
 	
-	public int removeProjectFromTeam(Project project, Team team) {
-		return NO_RECORD;
-	}
-	
-	public int removeUserFromTeam(User user, Team team) {
-		return NO_RECORD;
+	public boolean removeUserFromProject(Project project) {
+		try
+		{
+			String sqlDelete = "Delete from userproject where project_id=?";
+			getConnection();
+			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
+			ps1.setInt(1, project.getId());
+			ps1.executeUpdate();
+			ps1.close();
+			con.close();
+			return true;
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		return false;
 	}
 	
 	public int removeTaskFromUser(Task task, User user) {

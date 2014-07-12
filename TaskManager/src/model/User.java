@@ -12,7 +12,6 @@ public class User implements Serializable {
 	private String lastname;
 	private String password;
 	private String salt;
-	private ArrayList<Team> teams; //TODO: Can a user be a member of more than one team?
 	private ArrayList<Task> allTasks;
 	
 	public String getId() {
@@ -56,12 +55,6 @@ public class User implements Serializable {
 	}
 	public void setSalt(String salt) {
 		this.salt = salt;
-	}
-	public ArrayList<Team> getTeams() {
-		return teams;
-	}
-	public void setTeams(ArrayList<Team> teams) {
-		this.teams = teams;
 	}
 	public ArrayList<Task> getAllTasks() {
 		return allTasks;

@@ -23,8 +23,7 @@ $(document).ready(function() {
 	    var projectName=$('#projectName').val();
 	    var category=$('#category').val();
 	    var deadline=$('#deadline').val();
-	    var teamDesc=$('#team').val();
-	    if (projectName==="" || category==="" || deadline==="" || teamDesc==="") {
+	    if (projectName==="" || category==="" || deadline==="") {
 	    	error_free=false;
 	    }
 	    if ($('#projectName').hasClass("invalid")) {
@@ -34,9 +33,6 @@ $(document).ready(function() {
             error_free=false;
         }
 	    if ($('#deadline').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if ($('#team').hasClass("invalid")) {
             error_free=false;
         }
 	    if (!error_free){
@@ -51,7 +47,6 @@ function getHTML(strAction)
 	var projectName=$('#projectName').val();
 	var category=$('#category').val();
 	var deadline=$('#deadline').val();
-	var teamDesc=$('#team').val();
 	var html = '';
 	
 	$.ajax({
@@ -59,7 +54,7 @@ function getHTML(strAction)
 		cache: false,
 		url: 'createProject.do',
 		type:'POST',
-		data:{"projectName":projectName,"category":category,"deadline":deadline,"team":teamDesc},
+		data:{"projectName":projectName,"category":category,"deadline":deadline},
 		success: function(ajaxData) {
 			if (ajaxData == "success"){
 				window.top.location.href = 'userHome.jsp';

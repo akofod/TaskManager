@@ -1,5 +1,6 @@
 package control;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 
+import model.Project;
 import model.User;
 import dataaccess.TaskManagerDAO;
 
@@ -51,7 +53,8 @@ public class SearchUsersAjax extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Entered doPost() in SearchUsersAjax");
+		int project_id = Integer.parseInt(request.getParameter("project"));
+		String message = "";
 		RequestDispatcher rd;
 		String name = request.getParameter("user");
 		TaskManagerDAO dao = new TaskManagerDAO();
@@ -62,8 +65,24 @@ public class SearchUsersAjax extends HttpServlet {
 		else {
 			user = dao.retrieveUser(name);
 		}
+		Project project = dao.retrieveProject(project_id);
 		
-		System.out.println("Found user: " + user.getNickname() + " : " + user.getId());
+		int result = dao.addUserToProject(user, project);
+		if (result == 1) {
+			message = "User Added.";
+			System.out.println(message);
+		}
+		else if (result == 0) {
+			message = "That user is already assigned to this project.";
+			System.out.println(message);
+		}
+		else {
+			message = "Error adding user.";
+			System.out.println(message);
+		}
+		DataOutputStream out = new DataOutputStream(response.getOutputStream());
+		response.setContentType("text/plain");
+		out.writeBytes(message);
 	}
 
 }
