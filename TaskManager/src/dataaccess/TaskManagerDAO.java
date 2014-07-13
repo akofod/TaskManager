@@ -857,6 +857,23 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
+	public boolean updateTaskStatus(int task, String status) {
+		try {
+			String sql = "Update tasks set status=? where task_id=?";
+			getConnection();
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, status);
+			ps.setInt(2, task);
+			ps.executeUpdate();
+			ps.close();
+			con.close();
+			return true;
+		}
+		catch (Exception e){
+			return false;
+		}
+	}
+	
 	public int deleteUser(User user) {
 		return NO_RECORD;
 	}

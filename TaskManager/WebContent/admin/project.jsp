@@ -14,39 +14,6 @@
 <body>
 <div id="wrapper">
 	<div id="content-wrapperP">
-	
-		<form id="addTask" class="form">
-			<label for="desc">Description:</label>
-		    <input type="text" style="width: 300px" id="task-desc">
-		    <br/>
-		    <label for="prior">Priority:</label>
-		    <select id="task-prior">
-				<option value="Low">Low</option>
-				<option value="Medium">Medium</option>
-				<option value="High">High</option>
-			</select>
-			<br/>
-			<label for="stat">Status:</label>
-		    <select id="task-stat">
-				<option value="Open">Open</option>
-				<option value="In Process">In Process</option>
-				<option value="Completed">Completed</option>
-			</select>
-			<br/>
-			<label for="time-est">Time Estimate (Hours):</label>
-            <input type="text" style="width: 100px" id="task-timeest" value=0>
-            <br/>
-            <label for="time-comp">Time Completed (Hours):</label>
-            <input type="text" style="width: 100px" id="task-timecomp" value=0>
-            <br/>
-			<label for="duedate">Task Due Date:</label>
-            <input id="duedate" type="text" name="duedate" />
-            <br/>
-		    <input type="button" style="width: 150px" id="addTaskB" value="Add Task To Project">
-		    <input type="hidden" id="currProj" value="${project.project_id}">
-	    </form>
-	    
-	    <br/>
 		<div id="Open" class="column">
 			Open Tasks
 			<c:forEach var="tsk" items="${project.projectTasks}">
@@ -100,13 +67,31 @@
 					</c:when>
 				</c:choose>
 			</c:forEach>
-		</div>		
+		</div>	
+		<c:set var="project_id">
+			<c:url value="addTask.jsp">
+				<c:param name="project_id" value="${project.project_id}"/>
+			</c:url>
+		</c:set>
+	<a href="${project_id}">Add Task To Project</a>	
 	</div>
 </div>
-
 <script>
+	
 $(function() {
-	$(".column").sortable({connectWith:".column"});
+	$(".column").sortable({
+		connectWith:".column",
+		stop:function(event, ui){
+			var idChange = ui.item.context.id;	
+			$('.task').each(function(index, value){
+				var taskId = $(this).attr('id');
+				var taskStatus = $(this).parent().attr('id');
+				if (idChange == taskId){
+					updateTasks(taskId, taskStatus);
+				}	
+	    	});
+		}
+	});
 });
 
 function delete_click(clicked_id) {
@@ -125,34 +110,22 @@ function delete_click(clicked_id) {
 		}
 	}); 
 }
-$(function() {
-	$("#duedate").datepicker();
-});
 
-$('#addTaskB').click(function() {  
-	
-	var desc=$('#task-desc').val();
-	var priority=$('#task-prior').val();
-	var status=$('#task-stat').val();
-	var estimate=$('#task-timeest').val();
-	var completed=$('#task-timecomp').val();
-	var due =$('#duedate').val();
-	var project = $('#currProj').val();
+function updateTasks(task, status) {
 	$.ajax({
-		url: '/TaskManager/CreateNewTaskAjax',
+		url: '/TaskManager/UserTasksAjax',
 		type:'POST',
-		data:{"desc":desc,"priority":priority,"status":status,"estimate":estimate,"completed":completed,"due":due, "project":project},
+		data:{"task":task,"status":status},
 		success: function(ajaxData) {
-			alert (ajaxData);
-			if (ajaxData == "Task has been added."){
+			if (ajaxData == "Status Update Successful."){
 				location.reload();
 			}
 		},
 		error: function(request, status, error) {
 			alert('Error');
 		}
-	}); 
-});
+	});
+}
 
 </script>
 </body>

@@ -107,5 +107,9 @@ public class AuthFilter implements Filter {
 			Project proj = dao.retrieveProject(projNo);
 			request.setAttribute("project",  proj);
 		}
+		else if (uri.contains("/addTask.jsp")) {
+			int projNo = (Integer.parseInt(httpRequest.getParameter("project_id")));
+			request.setAttribute("project_id",  projNo);
+		}
 	}
 }
