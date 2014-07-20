@@ -15,34 +15,17 @@ $(document).ready(function() {
             }   
         });
     });
+    
     $(function() {
     	$( "#deadline" ).datepicker();
     });
-    $('#submit').click(function(event){
-	    var error_free=true;
-	    var projectName=$('#projectName').val();
-	    var category=$('#category').val();
-	    var deadline=$('#deadline').val();
-	    if (projectName==="" || category==="" || deadline==="") {
-	    	error_free=false;
-	    }
-	    if ($('#projectName').hasClass("invalid")) {
-	    	error_free=false;
-	    }
-	    if ($('#category').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if ($('#deadline').hasClass("invalid")) {
-            error_free=false;
-        }
-	    if (!error_free){
-	        event.preventDefault();
-	    }
-	    getHTML("createProject");
-	});
+    
+    $('#submit').click(function(){
+        getHTML();
+    });
 });
 
-function getHTML(strAction) 
+function getHTML() 
 {
 	var projectName=$('#projectName').val();
 	var category=$('#category').val();
