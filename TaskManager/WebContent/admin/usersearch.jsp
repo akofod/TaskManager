@@ -62,7 +62,7 @@ $(document).ready(function() {
                 <input id="user" type="text" name="user" />
             </div>
             <div>
-                <input type="submit" style="width: 100px" id="submit" value="Find User">
+                <input type="submit" style="width: 100px" id="submit" value="Add User">
             </div>
         </form>
     </div>

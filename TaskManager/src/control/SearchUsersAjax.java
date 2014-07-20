@@ -77,7 +77,7 @@ public class SearchUsersAjax extends HttpServlet {
 			System.out.println(message);
 		}
 		else {
-			message = "Error adding user.";
+			message = "User Not Found.";
 			System.out.println(message);
 		}
 		DataOutputStream out = new DataOutputStream(response.getOutputStream());
