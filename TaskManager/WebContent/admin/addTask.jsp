@@ -7,13 +7,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="/TaskManager/css/projectTask.css">
 <link rel="stylesheet" href="/TaskManager/css/jquery-ui-1.10.4.css">
+<link rel="stylesheet" href="/TaskManager/css/mainStyle.css">
+<link rel="stylesheet" href="/TaskManager/css/mainTemplate.css">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <title>Project Tasks</title>
 </head>
 <body>
-<div id="wrapper">
-	<div id="content-wrapperP">
 		<form id="addTask" class="form">
 			<label for="desc">Description:</label>
 		    <input type="text" style="width: 300px" id="task-desc">
@@ -43,15 +43,7 @@
             <br/>
 		    <input type="button" style="width: 150px" id="addTaskB" value="Add Task To Project">
 		    <input type="hidden" id="currProj" value="${project_id}">
-		    <c:set var="projectID">
-				<c:url value="project.jsp">
-					<c:param name="projectID" value="${project_id}"/>
-				</c:url>
-			</c:set>
-			<a href="${projectID}">Return To Project Home</a>
 	    </form>		
-	</div>
-</div>
 
 <script>
 

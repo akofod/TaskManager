@@ -15,8 +15,14 @@
 <body>
     <h3>Project Settings</h3>
     <center>
-		<a href="">Update Description</a><br>
-		<a href="">Change Due Date</a><br>
+    	<c:url var="updateDescription" value="updateProjectDesc.jsp">
+            <c:param name="project" value="<%= request.getParameter(\"projectID\") %>"/>
+        </c:url>
+		<a href="${updateDescription}" id="update_description">Update Description</a><br>
+		<c:url var="updateDueDate" value="updateProjectDueDate.jsp">
+            <c:param name="project" value="<%= request.getParameter(\"projectID\") %>"/>
+        </c:url>
+		<a href="${updateDueDate }">Change Due Date</a><br>
 		<c:url var="inviteUsers" value="usersearch.jsp">
             <c:param name="project" value="<%= request.getParameter(\"projectID\") %>"/>
         </c:url>

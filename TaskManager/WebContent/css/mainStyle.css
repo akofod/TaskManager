@@ -162,6 +162,12 @@ td .text {
  	padding-right:8px;
  }
  
+ .project-category {
+ 	padding-left:8px;
+ 	padding-right:8px;
+ 	border-bottom:1px dotted;
+ }
+ 
  .project-dueDate {
  	padding-left:8px;
  	padding-right:8px;

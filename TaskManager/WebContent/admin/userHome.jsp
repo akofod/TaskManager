@@ -44,6 +44,7 @@ $(document).ready(function() {
 				</c:set>
 				<div class="project">
 					<div class="project-description"><a href="${taskURL}">${proj.description}</a></div>
+					<div class="project-category">Category: ${proj.category}</div>
 					<div class="project-dueDate">Due: ${proj.final_deadline}</div>
 					<div class="project-footer"><a class="settings" href="${settingsURL}">Settings . . .</a></div>
 				</div>

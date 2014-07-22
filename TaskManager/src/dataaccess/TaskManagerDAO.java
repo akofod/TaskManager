@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -22,7 +23,6 @@ public class TaskManagerDAO {
 	private final int NO_RECORD = -1;
 	private final int RECORD_EXISTS = 0;
 	private final int SUCCESS = 1;
-	private Connection con;
 	DataSource ds;
 	
 	/**
@@ -39,11 +39,11 @@ public class TaskManagerDAO {
 	 * to allow for heavy database traffic.
 	 * @return the database connection.
 	 */
-	public Connection getConnection() {
+	private Connection getConnection() {
 		try {
 			Context cxt = new InitialContext();
 			ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/TaskManager" );
-			con = ds.getConnection();
+			Connection con = ds.getConnection();
 			return con;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,7 +92,7 @@ public class TaskManagerDAO {
             String sql = "INSERT INTO users(user_id, nickname, firstname, " +
                     "lastname, password, salt) VALUES (?,?,?,?,?,?) ";
             
-            getConnection();
+            Connection con = getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql);
             String salt = getSalt();
@@ -130,7 +130,7 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Projects(category_id, final_deadline, description) " + 
             		"VALUES (?,?,?) ";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, project.getCategoryId());
@@ -153,7 +153,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlCheck = "Select project_id from userproject where user_id=?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement psCheck = con.prepareStatement(sqlCheck);	
 			psCheck.setString(1, user.getId());
 			ResultSet rs = psCheck.executeQuery();
@@ -177,7 +177,7 @@ public class TaskManagerDAO {
         	{
             	String sql = "INSERT INTO userproject(user_id, project_id) " + 
             		"VALUES (?,?) ";
-            	getConnection();
+            	Connection con = getConnection();
             	PreparedStatement ps = con.prepareStatement(sql);
 
             	ps.setString(1, user.getId());
@@ -209,7 +209,7 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Categories(description) " + 
             		"VALUES (?) ";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, description);
@@ -242,7 +242,7 @@ public class TaskManagerDAO {
         {
             String sql = "INSERT INTO Tasks(description, due_date, " +
                     "priority, time_estimate, time_completed, status, project_id) VALUES (?,?,?,?,?,?,?) ";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, task.getDescription());
@@ -269,7 +269,7 @@ public class TaskManagerDAO {
 		try
         {
             String sql = "Select max(task_id) as task_id from tasks";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -295,7 +295,7 @@ public class TaskManagerDAO {
 		try
         {
             String sql = "Select max(project_id) as project_id from projects";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -338,7 +338,7 @@ public class TaskManagerDAO {
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
             String sql = "SELECT * FROM tasks WHERE project_id = ?";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setInt(1, project.getId());
 
@@ -380,7 +380,7 @@ public class TaskManagerDAO {
 		User user = new User();
 		try {
             String sql = "SELECT * FROM users WHERE user_id = ?";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, id);
 
@@ -417,7 +417,7 @@ public class TaskManagerDAO {
 		User user = new User();
 		try {
             String sql = "SELECT * FROM users WHERE nickname = ?";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, nickname);
 
@@ -457,7 +457,7 @@ public class TaskManagerDAO {
 		Project project = new Project();
 		try {
             String sql = "SELECT * FROM projects WHERE project_id = ?";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setInt(1, id);
 
@@ -486,7 +486,7 @@ public class TaskManagerDAO {
 		try {
             String sql = "SELECT * FROM projects WHERE project_id in "
             		+ "(SELECT project_id FROM userproject WHERE user_id = ?)";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, user.getId());
 
@@ -499,6 +499,7 @@ public class TaskManagerDAO {
             	project.setFinalDeadline(rs.getDate("final_deadline"));
             	project.setCategoryId(rs.getInt("category_id"));
             	project.setProjectTasks(retrieveTasks(project));
+            	project.setCategory(getCategoryDescription(project.getCategoryId()));
                 projects.add(project);
             }
             rs.close();
@@ -511,6 +512,31 @@ public class TaskManagerDAO {
 		return projects;
 	}
 	
+	private String getCategoryDescription(int categoryId) {
+		String query = "select description from categories where category_id = ?";
+		String result = "";
+		
+		try {
+			Connection con = getConnection();
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, categoryId);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				result = rs.getString(1);
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			
+		}
+		
+		return result;
+	}
+
+
 	public Category retrieveCategory(int id) {
 		return null;
 	}
@@ -519,7 +545,7 @@ public class TaskManagerDAO {
 		Category cat = new Category();
 		try {
 			String sql = "SELECT * FROM categories WHERE description = ?";
-			getConnection();
+			Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, desc);
 
@@ -549,7 +575,7 @@ public class TaskManagerDAO {
 		ArrayList<Category> list = new ArrayList<Category>();
 		try {
 			String sql = "SELECT * FROM categories WHERE description LIKE ?";
-			getConnection();
+			Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1,"%" + term + "%");
 
@@ -583,7 +609,7 @@ public class TaskManagerDAO {
 		
 		try {
 			String sql = "Update Users set user_id = ?, nickname = ?, firstname = ?, lastname=? where user_id = ?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement s = con.prepareStatement(sql);
 			s.setString(1, newUser.getUser_id());
 			s.setString(2, newUser.getNickname());
@@ -619,7 +645,7 @@ public class TaskManagerDAO {
 			try
 			{
 				String sql = "Update users set user_id=? where user_id=?";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, newId);
 				ps.setString(2, oldId);
@@ -653,7 +679,7 @@ public class TaskManagerDAO {
 			try
 			{
 				String sql = "Update users set nickname=? where user_id=?";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, nickname);
 				ps.setString(2, userId);
@@ -683,7 +709,7 @@ public class TaskManagerDAO {
 		else {
 			try {
 				String sql = "Update users set firstname=? where user_id=?";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, newFirstName);
 				ps.setString(2, userId);
@@ -713,7 +739,7 @@ public class TaskManagerDAO {
 		else {
 			try {
 				String sql = "Update users set lastname=? where user_id=?";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setString(1, lastname);
 				ps.setString(2, userId);
@@ -745,7 +771,7 @@ public class TaskManagerDAO {
 				try
 				{
 					String sql = "Update users set password=?, salt=? where user_id=?";
-					getConnection();
+					Connection con = getConnection();
 					PreparedStatement ps = con.prepareStatement(sql);
 					String salt = getSalt();
 					String newPassSecure = getSecurePassword(newPass, salt);
@@ -774,7 +800,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlTask = "Select task_id from usertask where user_id=?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement ps0 = con.prepareStatement(sqlTask);	
 			ps0.setString(1, userId);
 			ResultSet rs = ps0.executeQuery();
@@ -796,7 +822,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlDelete = "Delete from usertask where user_id=?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 			ps1.setString(1, userId);
 			ps1.executeUpdate();
@@ -813,7 +839,7 @@ public class TaskManagerDAO {
 		{	
 			for (Integer i : taskList) {
 				String sqlInsert = "Insert into usertask values (?,?)";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps = con.prepareStatement(sqlInsert);
 				ps.setString(1, userId);
 				ps.setInt(2, i);
@@ -831,7 +857,7 @@ public class TaskManagerDAO {
 		try
 		{	
 			String sqlInsert = "Insert into usertask values (?,?)";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sqlInsert);
 			ps.setString(1, userId);
 			ps.setInt(2, task);
@@ -860,7 +886,7 @@ public class TaskManagerDAO {
 	public boolean updateTaskStatus(int task, String status) {
 		try {
 			String sql = "Update tasks set status=? where task_id=?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, status);
 			ps.setInt(2, task);
@@ -888,7 +914,7 @@ public class TaskManagerDAO {
 			try
 			{
 				String sql = "Delete from projects where project_id=?";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ps.setInt(1, project.getProject_id());
 				ps.executeUpdate();
@@ -916,7 +942,7 @@ public class TaskManagerDAO {
 			try
 			{
 				String sqlDelete = "Delete from tasks where task_id=?";
-				getConnection();
+				Connection con = getConnection();
 				PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 				ps1.setInt(1, task);
 				ps1.executeUpdate();
@@ -935,7 +961,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlDelete = "Delete from usertask where task_id=?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 			ps1.setInt(1, task);
 			ps1.executeUpdate();
@@ -953,7 +979,7 @@ public class TaskManagerDAO {
 		try
 		{
 			String sqlDelete = "Delete from userproject where project_id=?";
-			getConnection();
+			Connection con = getConnection();
 			PreparedStatement ps1 = con.prepareStatement(sqlDelete);
 			ps1.setInt(1, project.getId());
 			ps1.executeUpdate();
@@ -1011,7 +1037,7 @@ public class TaskManagerDAO {
 		boolean used = false;
 		try {
             String sql = "SELECT * FROM users WHERE nickname = ?";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, nickname);
 
@@ -1034,7 +1060,7 @@ public class TaskManagerDAO {
 		boolean used = false;
 		try {
             String sql = "SELECT * FROM users WHERE user_id = ?";
-            getConnection();
+            Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, userId);
 
@@ -1093,7 +1119,7 @@ public class TaskManagerDAO {
 		
 		try {
 			String sql = "SELECT * FROM users WHERE user_id LIKE ?";
-			getConnection();
+			Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, name + "%");
 
@@ -1114,7 +1140,7 @@ public class TaskManagerDAO {
 		
 		try {
 			String sql = "SELECT * FROM users WHERE nickname LIKE ?";
-			getConnection();
+			Connection con = getConnection();
             PreparedStatement s = con.prepareStatement(sql);
             s.setString(1, name + "%");
 
@@ -1134,6 +1160,98 @@ public class TaskManagerDAO {
 		}
 		
 		return list;
+	}
+
+
+	public String getProjectDescription(int project_id) {
+		String query = "select description from projects where project_id = ?";
+		Connection con = getConnection();
+		String result = "";
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, project_id);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				result = rs.getString(1);
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+
+	public int updateProjectDescription(int project_id, String description) {
+		String query = "update projects set description = ? where project_id = ?";
+		Connection con = getConnection();
+		int count = 0;
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, description);
+			ps.setInt(2, project_id);
+			count = ps.executeUpdate();
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return count;
+	}
+
+
+	public String getDueDate(int project_id) {
+		String query = "select final_deadline from projects where project_id = ?";
+		Connection con = getConnection();
+		String result = "";
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, project_id);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				result = rs.getString(1);
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+
+	public int updateProjectDueDate(int project_id, String newDate) {
+		String query = "update projects set final_deadline = ? where project_id = ?";
+		Connection con = getConnection();
+		int count = 0;
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		
+		try {
+			java.sql.Date sqldate = new java.sql.Date(formatter.parse(newDate).getTime());
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setDate(1, sqldate);
+			ps.setInt(2, project_id);
+			count = ps.executeUpdate();
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return count;
 	}
 
 	

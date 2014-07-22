@@ -12,6 +12,7 @@ public class Project implements Serializable {
 	private int category_id;
 	private Date final_deadline;
 	private ArrayList<Task> projectTasks;
+	private String category;
 	
 	public int getProject_id() {
 		return project_id;
@@ -57,4 +58,11 @@ public class Project implements Serializable {
 	public void setProjectTasks(ArrayList<Task> projectTasks) {
 		this.projectTasks = projectTasks;
 	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
 }
