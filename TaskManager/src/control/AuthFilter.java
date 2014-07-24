@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import dataaccess.TaskManagerDAO;
 import model.Project;
+import model.Task;
 import model.User;
 
 /**
@@ -110,6 +111,11 @@ public class AuthFilter implements Filter {
 		else if (uri.contains("/addTask.jsp")) {
 			int projNo = (Integer.parseInt(httpRequest.getParameter("project_id")));
 			request.setAttribute("project_id",  projNo);
+		}
+		else if (uri.contains("/taskSettings.jsp")) {
+			int task_id = (Integer.parseInt(httpRequest.getParameter("task_id")));
+			Task task = dao.getTaskFromID(task_id);
+			request.setAttribute("task",  task);
 		}
 	}
 }

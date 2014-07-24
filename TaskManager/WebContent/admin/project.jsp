@@ -38,7 +38,12 @@
 				<c:choose>
 					<c:when test="${tsk.status == 'Open'}">
 						<div class="task" id="${tsk.task_id}">
-							<div class="task-description"><a href="">${tsk.description}</a></div>
+							<c:set var="task_url">
+								<c:url value="taskSettings.jsp">
+									<c:param name="task_id" value="${tsk.task_id}"/>
+								</c:url>
+							</c:set>
+							<div class="task-description"><a href="${task_url}">${tsk.description}</a></div>
 							<div class="task-priority"><b>Priority:</b> ${tsk.priority}</div>
 							<div class="task-status"><b>Status:</b> ${tsk.status}</div>
 							<div class="task-time-estimate"><b>Time Estimate:</b> ${tsk.time_estimate}</div>
@@ -55,7 +60,12 @@
 				<c:choose>
 					<c:when test="${tsk.status == 'In Process'}">
 						<div class="task" id="${tsk.task_id}">
-							<div class="task-description"><a href="">${tsk.description}</a></div>
+							<c:set var="task_url">
+								<c:url value="taskSettings.jsp">
+									<c:param name="task_id" value="${tsk.task_id}"/>
+								</c:url>
+							</c:set>
+							<div class="task-description"><a href="${task_url}">${tsk.description}</a></div>
 							<div class="task-priority"><b>Priority:</b> ${tsk.priority}</div>
 							<div class="task-status"><b>Status:</b> ${tsk.status}</div>
 							<div class="task-time-estimate"><b>Time Estimate:</b> ${tsk.time_estimate}</div>
@@ -72,7 +82,12 @@
 				<c:choose>
 					<c:when test="${tsk.status == 'Completed'}">
 						<div class="task" id="${tsk.task_id}">
-							<div class="task-description"><a href="">${tsk.description}</a></div>
+							<c:set var="task_url">
+								<c:url value="taskSettings.jsp">
+									<c:param name="task_id" value="${tsk.task_id}"/>
+								</c:url>
+							</c:set>
+							<div class="task-description"><a href="${task_url}">${tsk.description}</a></div>
 							<div class="task-priority"><b>Priority:</b> ${tsk.priority}</div>
 							<div class="task-status"><b>Status:</b> ${tsk.status}</div>
 							<div class="task-time-estimate"><b>Time Estimate:</b> ${tsk.time_estimate}</div>

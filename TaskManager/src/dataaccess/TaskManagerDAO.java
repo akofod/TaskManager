@@ -288,6 +288,37 @@ public class TaskManagerDAO {
 		return result;
 	}
 	
+	public Task getTaskFromID (int task_id) {
+		Task task = new Task();
+		try
+        {
+            String sql = "Select task_id,description,due_date,priority,time_estimate,time_completed,status,project_id from tasks where task_id=?";
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, task_id);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+            	task.setId(rs.getInt("task_id"));
+            	task.setDescription(rs.getString("description"));
+            	task.setDueDate(rs.getDate("due_date"));
+            	task.setPriority(rs.getString("priority"));
+            	task.setTimeEstimate(rs.getDouble("time_estimate"));
+            	task.setTimeCompcompleted(rs.getDouble("time_completed"));
+            	task.setStatus(rs.getString("status"));
+            	task.setProjectId(rs.getInt("project_id"));
+            }
+            
+            rs.close();
+            ps.close();
+            con.close();
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+		return task;
+	}
+	
 	public int findMaxProject () {
 		
 		int result = -1;
@@ -878,9 +909,31 @@ public class TaskManagerDAO {
 		return NO_RECORD;
 	}
 	
-	public int updateTask(int task_id, String description, Date dueDate, int priority,
-			Date timeEst, int projectId, int userId) {
-		return NO_RECORD;
+	public int updateTask(Task task) {
+		java.sql.Date sqlDate = new java.sql.Date(task.getDueDate().getTime());
+		try
+        {
+            String sql = "Update Tasks set description = ?, due_date = ?, " +
+                    "priority = ?, time_estimate = ?, time_completed = ?, status = ? where task_id=? ";
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, task.getDescription());
+            ps.setDate(2, sqlDate);
+            ps.setString(3, task.getPriority());
+            ps.setDouble(4, task.getTimeEstimate());
+            ps.setDouble(5, task.getTimeCompleted());
+            ps.setString(6, task.getStatus());
+            ps.setInt(7, task.getId());
+            
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+            return SUCCESS;
+        }
+        catch(Exception e){
+            return NO_RECORD;
+        }
 	}
 	
 	public boolean updateTaskStatus(int task, String status) {
