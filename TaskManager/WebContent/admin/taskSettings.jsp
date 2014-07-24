@@ -69,9 +69,12 @@ $('#addTaskB').click(function() {
 		type:'POST',
 		data:{"task_id":taskId, "desc":desc,"priority":priority,"status":status,"estimate":estimate,"completed":completed,"due":due, "project":project},
 		success: function(ajaxData) {
-			alert (ajaxData);
 			if (ajaxData == "Task has been updated."){
-				location.reload();
+				//location.reload();
+				window.top.location.href = 'project.jsp?projectID=' + project;
+			}
+			else {
+				alert (ajaxData);
 			}
 		},
 		error: function(request, status, error) {
