@@ -47,18 +47,30 @@ public class UpdateUserAjax extends HttpServlet {
 		
 		User currUser = (User) request.getSession(true).getAttribute("user");
 		
+		
 		if ("updateUserDetails".equals(request.getParameter("type"))) {
-			User newUser = new User();
-			newUser.setUser_id(new_user_id);
-			newUser.setNickname(nickname);
-			newUser.setFirstName(firstname);
-			newUser.setLastName(lastname);
-			if (dao.updateUser(newUser, currUser) == 1) {
-				currUser.setUser_id(new_user_id);
-				currUser.setNickname(nickname);
-				currUser.setFirstName(firstname);
-				currUser.setLastName(lastname);
-				message = "User Update Successful";
+			if (dao.isNicknameUsed(nickname)) {
+				message = "Nickname already in use.";
+			}
+			else if (nickname.length() < 6 || nickname.length() > 15) {
+				message = "Nickname must be between 6 and 15 characters.";
+			}
+			else if (!nickname.matches("^[a-zA-Z0-9]{6,15}$")) {
+				message = "Nickname may only contain letters or numbers.";
+			}
+			else {
+				User newUser = new User();
+				newUser.setUser_id(new_user_id);
+				newUser.setNickname(nickname);
+				newUser.setFirstName(firstname);
+				newUser.setLastName(lastname);
+				if (dao.updateUser(newUser, currUser) == 1) {
+					currUser.setUser_id(new_user_id);
+					currUser.setNickname(nickname);
+					currUser.setFirstName(firstname);
+					currUser.setLastName(lastname);
+					message = "User Update Successful";
+				}
 			}
 		}
 		

@@ -14,7 +14,7 @@
 <body>
     <h3>Update Account Information</h3>
     <form id="updateAccountDetails" action="/TaskManager/UpdateUserAjax?type=updateUserDetails" method="POST" class="form">
-        <div>
+        <div style="display:none">
             <label for="email">Email:</label>
             <input id="email" type="email" name="email" value=${user.user_id}>
         </div>
