@@ -64,7 +64,7 @@ $(document).ready(function() {
 </head>
 <body>
 <h3>Project Due Date</h3>
-<input type="text" id="dueDate" />
+<input type="text" id="dueDate" readonly='true'/>
 <input type="submit" id="submit" value="Update" />
 </body>
 </html>
